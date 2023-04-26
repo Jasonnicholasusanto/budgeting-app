@@ -2,12 +2,11 @@
 import { Form, NavLink } from "react-router-dom"
 
 // library
-// import { TrashIcon } from '@heroicons/react/24/solid'
-
 import DeleteIcon from '@mui/icons-material/Delete';
 
 // assets
-import logomark from "../assets/logomark.svg"
+// import logomark from "../assets/logomark.svg"
+import logo from "../assets/logo.svg";
 
 const Nav = ({ userName }) => {
   return (
@@ -16,8 +15,8 @@ const Nav = ({ userName }) => {
         to="/"
         aria-label="Go to home"
       >
-        <img src={logomark} alt="" height={30} />
-        <span>CashewMoney</span>
+        <img src={logo} alt="" height={30} />
+        <span>CashU</span>
       </NavLink>
 
       {/* This section is for a button deleting user. */}
@@ -34,7 +33,6 @@ const Nav = ({ userName }) => {
           >
             <button type="submit" className="btn btn--warning">
               <span>Delete User</span>
-              {/* <TrashIcon width={20} /> */}
               <DeleteIcon width={20} />
             </button>
 

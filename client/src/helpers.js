@@ -12,6 +12,30 @@ export const deleteItem = ({ key }) => {
     return localStorage.removeItem(key)
 } 
 
+const generateRandomColor = () => {
+    const existingBudgetLength = fetchData("budgets")?.length ?? 0;
+    return `${existingBudgetLength * 36} 65% 50%`
+}
+
+// create a new budget
+export const createBudget = ({ name, amount, dateFrom, dateTo }) => {
+    
+    const newItem = {
+        id: crypto.randomUUID(),
+        name: name,
+        createdAt: Date.now(),
+        amount: +amount,
+        color: generateRandomColor(),
+        dateFrom: new Date(dateFrom),
+        dateTo: new Date(dateTo)
+    }
+
+    const existingBudgets = fetchData("budgets") ?? [];
+
+    return localStorage.setItem("budgets",
+        JSON.stringify([...existingBudgets, newItem]))
+}
+
 export const checkStorage = () => {
     var _lsTotal = 0,
         _xLen, _x;
@@ -25,5 +49,3 @@ export const checkStorage = () => {
     };
     console.log("Total = " + (_lsTotal / 1024).toFixed(2) + " KB");
 }
-
-checkStorage;

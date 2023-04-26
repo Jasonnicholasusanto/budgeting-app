@@ -10,8 +10,17 @@ export async function logoutAction() {
   deleteItem({
     key: "userName"
   })
+  
+  const resolveAfter3Sec = new Promise(resolve => setTimeout(resolve, 1000));
+  toast.promise(
+      resolveAfter3Sec,
+      {
+        pending: 'Deleting account...',
+        success: 'Account deleted.',
+        error: 'Error deleting account'
+      }
+  )
 
-  toast.success("You have deleted your account.")
   // return redirect
   return (
     redirect("/")

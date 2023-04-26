@@ -1,23 +1,72 @@
-// react-router-dom imports
+// rrd imports
 import { useLoaderData } from "react-router-dom";
 
+// library imports
+import { toast } from "react-toastify";
+
+// components
+import Landing from "../components/Landing.jsx";
+import AddBudgetForm from "../components/AddBudgetForm.jsx";
+
 //  helper functions
-import { fetchData } from "../helpers";
+import { createBudget, fetchData } from "../helpers.js";
 
-// loader - fetches data using the helper function and returns it in an object { userName }.
+// loader
 export function dashboardLoader() {
-    const userName = fetchData("userName");
-    return { userName }
+  const userName = fetchData("userName");
+  const budgets = fetchData("budgets");
+  return { userName, budgets }
 }
- 
-const Dashboard = () => {
-    // Using the useLoaderData() hook from RRD
-    const { userName } = useLoaderData();
 
-    return (
-        <div>
-            <h1>{userName}'s Dashboard</h1>
-        </div>
-    )
+// action
+export async function dashboardAction({ request }) {
+  const data = await request.formData();
+  const { _action, ...values } = Object.fromEntries(data);
+
+  // new user submission
+  if (_action === "newUser") {
+    try {
+      localStorage.setItem("userName", JSON.stringify(values.userName))
+      return toast.success(`Welcome, ${values.userName}`)
+    } catch (e) {
+      throw new Error("There was a problem creating your account.")
+    }
+  }
+
+  if (_action === "createBudget") {
+    try {
+      createBudget({
+        name: values.newBudget,
+        amount: values.newBudgetAmount,
+        dateFrom: values.dateFrom,
+        dateTo: values.dateTo
+      })
+      return toast.success(`"${values.newBudget}" Budget created!`);
+    } catch (e) {
+      throw new Error("There was a problem creating your budget.")
+    }
+  }
 }
-export default Dashboard;
+
+const Dashboard = () => {
+  const { userName, budgets } = useLoaderData()
+
+  return (
+    <>
+      {userName ? (
+        <div className="dashboard">
+          <h1>Welcome back, <span className="accent">{userName}</span></h1>
+          <div className="grid-sm">
+            {/* {budgets ? () : ()} */}
+            <div className="grid-lg">
+              <div className="flex-lg">
+                <AddBudgetForm />
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : <Landing />}
+    </>
+  )
+}
+export default Dashboard
