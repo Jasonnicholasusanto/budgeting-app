@@ -7,9 +7,10 @@ import { toast } from "react-toastify";
 // components
 import Landing from "../components/Landing.jsx";
 import AddBudgetForm from "../components/AddBudgetForm.jsx";
+import AddTransactionForm from "../components/AddTransactionForm.jsx";
 
 //  helper functions
-import { createBudget, fetchData } from "../helpers.js";
+import { createBudget, createTransaction, fetchData, waitPromise } from "../helpers.js";
 
 // loader
 export function dashboardLoader() {
@@ -22,6 +23,9 @@ export function dashboardLoader() {
 export async function dashboardAction({ request }) {
   const data = await request.formData();
   const { _action, ...values } = Object.fromEntries(data);
+  const loading = new Promise(resolve => setTimeout(resolve, 1000));
+  
+  await waitPromise();
 
   // new user submission
   if (_action === "newUser") {
@@ -41,9 +45,34 @@ export async function dashboardAction({ request }) {
         dateFrom: values.dateFrom,
         dateTo: values.dateTo
       })
-      return toast.success(`"${values.newBudget}" Budget created!`);
+
+      return toast.success(`${values.newBudget} budget created!`);
+      // return toast.promise(
+      //   loading,
+      //   {
+      //     pending: 'Creating new budget...',
+      //     success: `${values.newBudget} budget created!`,
+      //     error: 'Error creating new budget 😱'
+      //   }
+      // );
     } catch (e) {
       throw new Error("There was a problem creating your budget.")
+    }
+  }
+
+  if (_action === "createTransaction") {
+    try {
+      createTransaction({
+        transactionType: values.transactionOption,
+        recurring: values.recurringTransaction,
+        name: values.newTransaction,
+        amount: values.newTransactionAmount,
+        budgetId: values.newTransactionBudget,
+        transactionDate: values.transactionDate
+      })
+      return toast.success(`${values.transactionOption} - ${values.newTransaction} created!`)
+    } catch (e) {
+      throw new Error("There was a problem creating this transaction.")
     }
   }
 }
@@ -55,14 +84,26 @@ const Dashboard = () => {
     <>
       {userName ? (
         <div className="dashboard">
-          <h1>Welcome back, <span className="accent">{userName}</span></h1>
+          <h1>Welcome, <span className="accent">{userName}</span></h1>
           <div className="grid-sm">
-            {/* {budgets ? () : ()} */}
-            <div className="grid-lg">
-              <div className="flex-lg">
-                <AddBudgetForm />
-              </div>
-            </div>
+            {
+              budgets && budgets.length > 0
+                ? (
+                  <div className="grid-lg">
+                    <div className="flex-lg">
+                      <AddBudgetForm />
+                      <AddTransactionForm budgets={budgets} />
+                    </div>
+                  </div>
+                )
+                : (
+                  <div className="grid-xs">
+                    {/* <p>Personal budgeting is the secret to financial freedom.</p> */}
+                    <p className="introText">Create a budget to get started!</p>
+                    <AddBudgetForm />
+                  </div>
+                )
+            }
           </div>
         </div>
       ) : <Landing />}

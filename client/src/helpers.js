@@ -12,10 +12,13 @@ export const deleteItem = ({ key }) => {
     return localStorage.removeItem(key)
 } 
 
+// Generates random color for the budget's border
 const generateRandomColor = () => {
     const existingBudgetLength = fetchData("budgets")?.length ?? 0;
     return `${existingBudgetLength * 36} 65% 50%`
 }
+
+export const waitPromise = () => new Promise(res => setTimeout(res, Math.random() * 2500));
 
 // create a new budget
 export const createBudget = ({ name, amount, dateFrom, dateTo }) => {
@@ -33,8 +36,29 @@ export const createBudget = ({ name, amount, dateFrom, dateTo }) => {
     const existingBudgets = fetchData("budgets") ?? [];
 
     return localStorage.setItem("budgets",
-        JSON.stringify([...existingBudgets, newItem]))
+        JSON.stringify([...existingBudgets, newItem]));
 }
+
+// Creates new transaction
+export const createTransaction = ({
+    transactionType, recurring, name, amount, budgetId, transactionDate
+  }) => {
+    const newItem = {
+        id: crypto.randomUUID(),
+        transactionType: transactionType,
+        recurring: recurring,
+        name: name,
+        createdAt: Date.now(),
+        transactionDate: transactionDate,
+        amount: +amount,
+        budgetId: budgetId
+    }
+
+    const existingTransactions = fetchData("transactions") ?? [];
+
+    return localStorage.setItem("transactions",
+      JSON.stringify([...existingTransactions, newItem]))
+  }
 
 export const checkStorage = () => {
     var _lsTotal = 0,

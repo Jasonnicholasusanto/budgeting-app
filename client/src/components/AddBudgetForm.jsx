@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Form } from "react-router-dom";
+import React, { useEffect, useRef, useState } from "react";
+import { Form, useFetcher } from "react-router-dom";
 
 // library imports
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
@@ -8,18 +8,37 @@ import "react-datepicker/dist/react-datepicker.css";
 
 const AddBudgetForm = () => {
 
+    const fetcher = useFetcher();
+    const isSubmitting = fetcher.state === "submitting";
+    const formRef = useRef();
+    const focusRef = useRef();
+
+    useEffect(() => {
+        if (!isSubmitting) {
+            formRef.current.reset();
+            focusRef.current.focus();
+            resetDates();
+        }
+    }, [isSubmitting])
+
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
     const [date, setDate] = useState(true);
+
+    const resetDates = () => {
+        setStartDate(null);
+        setEndDate(null);
+    }
 
     return (
         <div className="form-wrapper">
             <h2 className="h3">
                 Create budget
             </h2>
-            <Form
+            <fetcher.Form
                 method="post"
                 className="grid-sm"
+                ref={formRef}
             >
                 <div className="grid-xs">
                     <label htmlFor="newBudget">Budget Name*</label>
@@ -27,8 +46,9 @@ const AddBudgetForm = () => {
                         type="text"
                         name="newBudget"
                         id="newBudget"
-                        placeholder="e.g., Groceries"
+                        placeholder="e.g., Entertainment"
                         required
+                        ref={focusRef}
                     />
                 </div>
 
@@ -39,7 +59,7 @@ const AddBudgetForm = () => {
                         step="0.01"
                         name="newBudgetAmount"
                         id="newBudgetAmount"
-                        placeholder="e.g., $350"
+                        placeholder="e.g., $500"
                         required
                         inputMode="decimal"
                     />
@@ -49,28 +69,29 @@ const AddBudgetForm = () => {
                     <label htmlFor="Date">Date <span className="textReducedOpacity">&#40;not required&#41;</span></label>
 
                     {date && (
-                        <div className="grid-xs">
+                        <div className="budget-date">
                             <DatePicker 
+                                dateFormat="dd/MM/yyyy"
                                 selected={startDate} 
                                 onChange={(date) => setStartDate(date)} 
                                 placeholderText="From"
+                                todayButton="Today"
                                 name="dateFrom"
                                 id="dateFrom"
                             />
-                        </div>
-                    )}
 
-                    {date && (
-                        <div className="grid-xs">
                             <DatePicker 
+                                dateFormat="dd/MM/yyyy"
                                 selected={endDate} 
                                 onChange={(date) => setEndDate(date)} 
                                 placeholderText="To"
+                                todayButton="Today"
                                 name="dateTo"
                                 id="dateTo"
                             />
                         </div>
                     )}
+
                 </div>
 
                 <input
@@ -79,11 +100,22 @@ const AddBudgetForm = () => {
                     value="createBudget"
                 />
 
-                <button type="submit" className="btn btn--dark">
-                    <span>Create budget</span>
-                    <AttachMoneyIcon width={20} />
+                <button 
+                    type="submit" 
+                    className="btn btn--dark"
+                    disabled={isSubmitting}
+                    onSubmit={() => resetDates()}
+                >
+                    {
+                        isSubmitting 
+                            ? <span>Creating budget...</span>
+                            :   (<>
+                                    <span>Create budget</span>
+                                    <AttachMoneyIcon width={20} />
+                                </>)
+                    }
                 </button>
-            </Form>
+            </fetcher.Form>
         </div>
     )
 }

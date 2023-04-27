@@ -46,8 +46,8 @@ svg {
   --space-md: 24px;
   --space-lg: 32px;
   --space-xl: 40px;
-  --content-sm: 40ch;
-  --content: 60ch;
+  --content-sm: 60ch;
+  --content: 80ch;
   --round-sm: 4px;
   --round-md: 10px;
   --round-lg: 25px;
@@ -424,6 +424,11 @@ select {
   width: 100%;
 }
 
+.introText {
+  margin-bottom: 20px;
+  margin-left: 10px;
+}
+
 /* form */
 .form-wrapper {
   -webkit-box-flex: 1;
@@ -439,7 +444,7 @@ select {
   padding: var(--space-xl);
   border-radius: var(--round-lg);
   -webkit-box-shadow: 0.25em 0.3em 1em hsl(var(--muted) / 0.2);
-  box-shadow: 0.25em 0.3em 1em hsl(var(--muted) / 0.2);
+  box-shadow: 0.25em 0.3em 1em hsl(var(--muted) / 0.5);
   border-top: 0.25em solid #432211;
   border-left: 0.25em solid #432211;
   border-right: 0.25em solid #432211;
@@ -450,9 +455,17 @@ select {
   content: "";
   position: absolute;
   inset: 0.55rem;
-  border: 2px dashed hsl(var(--text));
+  /* border: 2px dashed hsl(var(--text)); */
+  border: 2px dashed #432211;
   border-radius: calc(var(--round-lg) * 0.6);
   z-index: -1;
+}
+
+.budget-date {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  gap: var(--space-md);
 }
 
 .expense-inputs {
