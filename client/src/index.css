@@ -434,7 +434,7 @@ select {
   -webkit-box-flex: 1;
   -ms-flex: 1 1 48%;
   flex: 1 1 48%;
-  max-width: 800px;
+  max-width: 1000px;
   position: relative;
   display: -ms-grid;
   display: grid;
@@ -451,14 +451,18 @@ select {
   border-bottom: 0.25em solid #432211;
 }
 
-.form-wrapper::before {
+/* .form-wrapper::before {
   content: "";
   position: absolute;
   inset: 0.55rem;
-  /* border: 2px dashed hsl(var(--text)); */
-  border: 2px dashed #432211;
+  border: 2px solid #432211;
   border-radius: calc(var(--round-lg) * 0.6);
   z-index: -1;
+} */
+
+.form-wrapper:hover {
+  transition: 0.3s ease;
+  transform: scale(1.03);
 }
 
 .budget-date {
@@ -489,7 +493,8 @@ select {
   display: flex;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
-  gap: var(--space-md);
+  gap: var(--space-md);    
+  justify-content: space-between;
 }
 
 .budget {
@@ -499,16 +504,23 @@ select {
   -webkit-box-flex: 1;
   -ms-flex: 1 1 32.2%;
   flex: 1 1 32.2%;
-  max-width: 600px;
+  /* max-width: 600px; */
+  max-width: 680px;
   -webkit-box-shadow: 0.25em 0.3em 1em hsl(var(--muted) / 0.2);
   box-shadow: 0.25em 0.3em 1em hsl(var(--muted) / 0.2);
-  background-color: var(--bkg);
+  background-color: white;
   border-radius: var(--round-lg);
   border: 3px solid hsl(var(--backdrop));
   padding: calc(var(--space-md) / 1.5) calc(var(--space-md) / 1.2);
   gap: var(--space-sm);
   text-decoration: none;
   color: hsl(var(--backdrop));
+  /* cursor: pointer; */
+}
+
+.budget:hover {
+  transition: 0.3s ease;
+  transform: scale(1.03);
 }
 
 .budget > .flex-sm {
@@ -540,6 +552,7 @@ select {
 
 .progress-text:nth-of-type(2) :nth-child(2) {
   color: hsl(var(--muted));
+  /* color: hsl(173 58% 39%); */
 }
 
 progress {
@@ -585,7 +598,7 @@ progress[value]::-webkit-progress-value {
   text-align: center;
 }
 
-/* chart component */
+/* Chart component */
 .table {
   overflow-x: auto;
 }
@@ -594,8 +607,13 @@ table {
   width: 100%;
 }
 
+/* Colour for each odd row of the table*/
 tr:nth-child(odd) {
-  background-color: hsl(var(--accent) / 0.04);
+  background-color: hsl(var(--text) / 0.1);
+}
+
+tr:nth-child(even) {
+  background-color: hsl(var(--text) / 0.02);
 }
 
 td {

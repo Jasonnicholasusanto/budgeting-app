@@ -33,7 +33,7 @@ const AddBudgetForm = () => {
     return (
         <div className="form-wrapper">
             <h2 className="h3">
-                Create budget
+                Create Budget
             </h2>
             <fetcher.Form
                 method="post"
@@ -71,7 +71,7 @@ const AddBudgetForm = () => {
                     {date && (
                         <div className="budget-date">
                             <DatePicker 
-                                dateFormat="dd/MM/yyyy"
+                                // dateFormat="dd/MM/yyyy"
                                 selected={startDate} 
                                 onChange={(date) => setStartDate(date)} 
                                 placeholderText="From"
@@ -81,7 +81,7 @@ const AddBudgetForm = () => {
                             />
 
                             <DatePicker 
-                                dateFormat="dd/MM/yyyy"
+                                // dateFormat="dd/MM/yyyy"
                                 selected={endDate} 
                                 onChange={(date) => setEndDate(date)} 
                                 placeholderText="To"
@@ -115,6 +115,7 @@ const AddBudgetForm = () => {
                                 </>)
                     }
                 </button>
+                
             </fetcher.Form>
         </div>
     )

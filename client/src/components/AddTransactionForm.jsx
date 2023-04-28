@@ -5,40 +5,8 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 import PaymentsIcon from '@mui/icons-material/Payments';
-
-const recurringExpenseTimeFrames = [
-    {
-        id: 0,
-        value: "nil",
-        title: "Not a recurring expense."
-    },
-    {
-        id: 1,
-        value: "daily",
-        title: "Yes, a daily expense."
-    },
-    {
-        id: 2,
-        value: "weekly",
-        title: "Yes, a weekly expense."
-    },
-    {
-        id: 3,
-        value: "monthly",
-        title: "Yes, a monthly expense."
-    },
-];
-
-const transactionOptions = [
-    {
-        id: 0,
-        title: "Expense"
-    },
-    {
-        id: 1,
-        title: "Income"
-    }
-]
+import recurringExpenseTimeFrames from "../transactionHelpers/Recurring.js";
+import transactionOptions from "../transactionHelpers/TransactionOptions.js";
 
 const AddTransactionForm = ({ budgets }) => {
 
@@ -110,6 +78,7 @@ const AddTransactionForm = ({ budgets }) => {
                             name="recurringTransaction"
                             id="recurringTransaction"
                             required
+                            disabled
                         >
                             {
                                 recurringExpenseTimeFrames
@@ -186,7 +155,7 @@ const AddTransactionForm = ({ budgets }) => {
                         </label>
 
                         <DatePicker 
-                            dateFormat="dd/MM/yyyy"
+                            // dateFormat="dd/MM/yyyy"
                             selected={date} 
                             onChange={(date) => setDate(date)} 
                             todayButton="Today"

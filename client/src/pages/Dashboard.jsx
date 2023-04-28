@@ -1,5 +1,5 @@
 // rrd imports
-import { useLoaderData } from "react-router-dom";
+import { Link, useLoaderData } from "react-router-dom";
 
 // library imports
 import { toast } from "react-toastify";
@@ -8,22 +8,24 @@ import { toast } from "react-toastify";
 import Landing from "../components/Landing.jsx";
 import AddBudgetForm from "../components/AddBudgetForm.jsx";
 import AddTransactionForm from "../components/AddTransactionForm.jsx";
+import Table from "../components/Table";
 
 //  helper functions
-import { createBudget, createTransaction, fetchData, waitPromise } from "../helpers.js";
+import { createBudget, createTransaction, deleteItem, fetchData, waitPromise } from "../helpers.js";
+import BudgetItem from "../components/BudgetItem.jsx";
 
 // loader
 export function dashboardLoader() {
   const userName = fetchData("userName");
   const budgets = fetchData("budgets");
-  return { userName, budgets }
+  const transactions = fetchData("transactions");
+  return { userName, budgets, transactions }
 }
 
-// action
+// Dashboard action
 export async function dashboardAction({ request }) {
   const data = await request.formData();
   const { _action, ...values } = Object.fromEntries(data);
-  const loading = new Promise(resolve => setTimeout(resolve, 1000));
   
   await waitPromise();
 
@@ -47,16 +49,9 @@ export async function dashboardAction({ request }) {
       })
 
       return toast.success(`${values.newBudget} budget created!`);
-      // return toast.promise(
-      //   loading,
-      //   {
-      //     pending: 'Creating new budget...',
-      //     success: `${values.newBudget} budget created!`,
-      //     error: 'Error creating new budget 😱'
-      //   }
-      // );
+
     } catch (e) {
-      throw new Error("There was a problem creating your budget.")
+      throw new Error("There was a problem creating your budget.");
     }
   }
 
@@ -70,15 +65,30 @@ export async function dashboardAction({ request }) {
         budgetId: values.newTransactionBudget,
         transactionDate: values.transactionDate
       })
-      return toast.success(`${values.transactionOption} - ${values.newTransaction} created!`)
+
+      return toast.success(`${values.transactionOption} - ${values.newTransaction} created!`);
     } catch (e) {
-      throw new Error("There was a problem creating this transaction.")
+      throw new Error("There was a problem creating this transaction.");
+    }
+  }
+
+  if (_action === "deleteTransaction") {
+    try {
+
+      deleteItem({
+        key: "transactions",
+        id: values.transactionId,
+      });
+
+      return toast.success("Transaction deleted!");
+    } catch (e) {
+      throw new Error("There was a problem deleting the transaction.");
     }
   }
 }
 
 const Dashboard = () => {
-  const { userName, budgets } = useLoaderData()
+  const { userName, budgets, transactions } = useLoaderData();
 
   return (
     <>
@@ -94,6 +104,32 @@ const Dashboard = () => {
                       <AddBudgetForm />
                       <AddTransactionForm budgets={budgets} />
                     </div>
+
+                    <h2>Existing Budgets</h2>
+
+                    <div className="budgets">
+                      {
+                        budgets.map((budget) => (
+                          <BudgetItem key={budget.id} budget={budget} />
+                        ))
+                      }
+                    </div>
+
+                    {
+                      transactions && transactions.length > 0 && (
+                        <div className="grid-md">
+                          <h2>Recent Transactions</h2>
+                          <Table transactions={
+                            transactions.sort((a, b) => b.transactionDate - a.transactionDate).slice(0, 8)
+                          } />
+                          {transactions.length > 8 && (
+                            <Link to="transactions" className="btn btn--dark">
+                              View all transactions
+                            </Link>
+                          )}
+                        </div>
+                      )
+                    }
                   </div>
                 )
                 : (

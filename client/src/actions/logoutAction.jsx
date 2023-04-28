@@ -2,18 +2,30 @@
 import { redirect } from "react-router-dom";
 
 // helpers
-import { deleteItem } from "../helpers";
+import { deleteItem, waitPromise } from "../helpers";
 import { toast } from "react-toastify";
 
 export async function logoutAction() {
-  // delete the user
+  
+  // deleting the user
   deleteItem({
     key: "userName"
   })
-  
-  const resolveAfter3Sec = new Promise(resolve => setTimeout(resolve, 1000));
+  deleteItem({
+    key: "budgets"
+  })
+  deleteItem({
+    key: "transactions"
+  })
+  deleteItem({
+    key: "expenses"
+  })
+  deleteItem({
+    key: "incomes"
+  })
+    
   toast.promise(
-      resolveAfter3Sec,
+      waitPromise,
       {
         pending: 'Deleting account...',
         success: 'Account deleted.',
