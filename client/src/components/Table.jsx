@@ -1,16 +1,17 @@
 // component import
 import TransactionItem from "./TransactionItem"
 
-const Table = ({ transactions }) => {
+const Table = ({ transactions, showPlan = true }) => {
   return (
     <div className="table">
       <table>
         <thead>
           <tr>
             {
-              ["Name", "Amount", "Date", "Plan", "Delete"].map((i, index) => (
-                <th key={index}>{i}</th>
-              ))
+              ["Name", "Amount", "Date", showPlan ? "Plan" : "", "Delete"].map(
+                (i, index) => (
+                  <th key={index}>{i}</th>
+                ))
             }
           </tr>
         </thead>
@@ -18,7 +19,7 @@ const Table = ({ transactions }) => {
           {
             transactions.map((transaction) => (
               <tr key={transaction.id}>
-                <TransactionItem transaction={transaction} />
+                <TransactionItem transaction={transaction} showPlan={showPlan}/>
               </tr>
             ))
           }

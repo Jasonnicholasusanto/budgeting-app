@@ -3,9 +3,16 @@ import React from "react";
 // helper functions
 import { calculateMoney, formatCurrency, formatDateToLocaleString, formatPercentage } from "../helpers";
 
-const SavingItem = ({ saving }) => {
+// Icon imports
+import DeleteIcon from '@mui/icons-material/Delete';
+import InfoIcon from '@mui/icons-material/Info';
+import { Form, Link } from "react-router-dom";
+
+const SavingItem = ({ saving, showDelete = false }) => {
     const { id, name, amount, color, dateFrom, dateTo, createdAt } = saving;
     const saved = calculateMoney(id);
+
+    console.log(saved);
 
     return (
         <div
@@ -35,7 +42,7 @@ const SavingItem = ({ saving }) => {
                     : <small>{formatCurrency(saved)} saved </small>
                 }
 
-                <small>{formatCurrency(amount + saved)} remaining</small>
+            <small>{formatCurrency(amount - saved)} remaining</small>
                 
             </div>
             
@@ -48,6 +55,36 @@ const SavingItem = ({ saving }) => {
                     <small style={{color: "#432211"}}>Created on: {formatDateToLocaleString(createdAt)}</small>
                 </div>
             }
+
+            {showDelete ? (
+                <div className="flex-sm">
+                    <Form
+                        method="post"
+                        action="delete"
+                        onSubmit={(event) => {
+                        if (
+                            !confirm(
+                            "Are you sure you want to permanently delete this saving plan?"
+                            )
+                        ) {
+                            event.preventDefault();
+                        }
+                        }}
+                    >
+                        <button type="submit" className="btn">
+                            <span>Delete Saving</span>
+                            <DeleteIcon width={20} />
+                        </button>
+                    </Form>
+                </div>
+            ) : (
+                <div className="flex-sm">
+                    <Link to={`/saving/${id}`} className="btn">
+                        <span>View Details</span>
+                        <InfoIcon width={20} />
+                    </Link>
+                </div>
+            )}
         </div>
     )
 }

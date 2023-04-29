@@ -4,7 +4,7 @@ import { Link, useFetcher } from "react-router-dom";
 import { formatCurrency, formatDateToLocaleString, getAllMatchingItems } from "../helpers"
 import DeleteIcon from '@mui/icons-material/Delete';
 
-const TransactionItem = ({ transaction }) => {
+const TransactionItem = ({ transaction, showPlan }) => {
   const symbol = (transaction.transactionType === "Expense") ? "-" : "+";
 
   const fetcher = useFetcher();
@@ -25,17 +25,21 @@ const TransactionItem = ({ transaction }) => {
       }
 
       <td>{formatDateToLocaleString(transaction.transactionDate)}</td>
-
-      <td>
-        <Link
-          to={`/plan/${plan.id}`}
-          style={{
-            "--accent": plan.color,
-          }}
-        >
-          {plan.name}
-        </Link>
-      </td>
+      
+      { showPlan && 
+        (
+          <td>
+            <Link
+              to={`/${plan.planType.toLowerCase()}/${plan.id}`}
+              style={{
+                "--accent": plan.color,
+              }}
+            >
+              {plan.name}
+            </Link>
+          </td>
+        )
+      }
 
       <td>
         <fetcher.Form method="post">

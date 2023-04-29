@@ -12,11 +12,13 @@ import MainLayout, { mainLoader } from "./layouts/MainLayout";
 
 // Actions imports
 import { logoutAction } from "./actions/logoutAction";
+import { deletePlan } from "./actions/deletePlan";
 
 // Routes
 import Dashboard, { dashboardAction, dashboardLoader } from "./pages/Dashboard";
 import Error from "./pages/Error";
 import TransactionsPage, { transactionsAction, transactionsLoader } from "./pages/TransactionsPage";
+import PlanPage, { planAction, planLoader } from "./pages/PlanPage";
 
 const router = createBrowserRouter([
   {
@@ -31,6 +33,32 @@ const router = createBrowserRouter([
         loader: dashboardLoader,
         action: dashboardAction,
         errorElement: <Error />
+      },
+      {
+        path: "budget/:id",
+        element: <PlanPage />,
+        loader: planLoader,
+        action: planAction,
+        errorElement: <Error />,
+        children: [
+          {
+            path: "delete",
+            action: deletePlan,
+          },
+        ],
+      },
+      {
+        path: "saving/:id",
+        element: <PlanPage />,
+        loader: planLoader,
+        action: planAction,
+        errorElement: <Error />,
+        children: [
+          {
+            path: "delete",
+            action: deletePlan,
+          },
+        ],
       },
       {
         path: "transactions",

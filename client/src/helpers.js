@@ -27,8 +27,10 @@ export const deleteItem = ({ key, id }) => {
 
 // Generates random color for the plan's border
 const generateRandomColor = () => {
-    const existingPlanLength = fetchData("plans")?.length ?? 0;
-    return `${existingPlanLength * 36} 65% 50%`
+    const hue = Math.floor(Math.random() * 360);
+    const saturation = 55;
+    const lightness = 35;
+    return `${hue} ${saturation}% ${lightness}%`;
 }
 
 export const waitPromise = () => new Promise(res => setTimeout(res, Math.random() * 1500));

@@ -3,11 +3,14 @@ import React from "react";
 // helper functions
 import { calculateMoney, formatCurrency, formatDateToLocaleString, formatPercentage } from "../helpers";
 
-const BudgetItem = ({ budget }) => {
+// Icon imports
+import DeleteIcon from '@mui/icons-material/Delete';
+import InfoIcon from '@mui/icons-material/Info';
+import { Form, Link } from "react-router-dom";
+
+const BudgetItem = ({ budget, showDelete = false }) => {
     const { id, name, amount, color, dateFrom, dateTo, createdAt } = budget;
     const spent = calculateMoney(id);
-
-    console.log(0 / amount);
 
     return (
         <div
@@ -50,6 +53,36 @@ const BudgetItem = ({ budget }) => {
                     <small style={{color: "#432211"}}>Created on: {formatDateToLocaleString(createdAt)}</small>
                 </div>
             }
+
+            {showDelete ? (
+                <div className="flex-sm">
+                    <Form
+                        method="post"
+                        action="delete"
+                        onSubmit={(event) => {
+                        if (
+                            !confirm(
+                            "Are you sure you want to permanently delete this budgeting plan?"
+                            )
+                        ) {
+                            event.preventDefault();
+                        }
+                        }}
+                    >
+                        <button type="submit" className="btn">
+                            <span>Delete Budget</span>
+                            <DeleteIcon width={20} />
+                        </button>
+                    </Form>
+                </div>
+            ) : (
+                <div className="flex-sm">
+                    <Link to={`/budget/${id}`} className="btn">
+                        <span>View Details</span>
+                        <InfoIcon width={20} />
+                    </Link>
+                </div>
+            )}
         </div>
     )
 }

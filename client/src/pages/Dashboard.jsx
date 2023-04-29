@@ -14,23 +14,25 @@ import Table from "../components/Table";
 import { createPlan, createTransaction, deleteItem, fetchData, waitPromise } from "../helpers.js";
 import BudgetItem from "../components/BudgetItem.jsx";
 import SavingItem from "../components/SavingItem.jsx";
+import { getAllMatchingItems } from "../helpers.js";
 
-// loader
+// loader to load all the user's data
 export function dashboardLoader() {
   const userName = fetchData("userName");
   const plans = fetchData("plans");
   const transactions = fetchData("transactions");
+
   return { userName, plans, transactions }
 }
 
-// Dashboard action
+// Dashboard actions
 export async function dashboardAction({ request }) {
   const data = await request.formData();
   const { _action, ...values } = Object.fromEntries(data);
   
   await waitPromise();
 
-  // new user submission
+  // Creating a new user
   if (_action === "newUser") {
     try {
       localStorage.setItem("userName", JSON.stringify(values.userName))
@@ -40,6 +42,7 @@ export async function dashboardAction({ request }) {
     }
   }
 
+  // Creating a new plan
   if (_action === "createPlan") {
     try {
       createPlan({
@@ -57,6 +60,7 @@ export async function dashboardAction({ request }) {
     }
   }
 
+  // Creating a new transaction
   if (_action === "createTransaction") {
     try {
       createTransaction({
@@ -74,6 +78,8 @@ export async function dashboardAction({ request }) {
     }
   }
 
+
+  // Deleting a transaction
   if (_action === "deleteTransaction") {
     try {
 
@@ -94,8 +100,6 @@ const Dashboard = () => {
 
   const budgets = (plans && plans.length > 0) ? plans.filter(plan => plan.planType === 'Budget') : [];
   const savings = (plans && plans.length > 0) ? plans.filter(plan => plan.planType === 'Saving') : [];
-
-  console.log(transactions);
 
   return (
     <>
@@ -159,7 +163,6 @@ const Dashboard = () => {
                 )
                 : (
                   <div className="grid-xs">
-                    {/* <p>Personal budgeting is the secret to financial freedom.</p> */}
                     <p className="introText">Create a budget or savings plan to get started!</p>
                     <AddPlanForm />
                   </div>

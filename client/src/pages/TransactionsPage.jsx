@@ -48,7 +48,7 @@ const TransactionsPage = () => {
           <h2>
             Recent Transactions <small>({transactions.length} total)</small>
           </h2>
-          <Table transactions={transactions.sort((a, b) => b.transactionDate - a.transactionDate)} />
+          <Table transactions={transactions.sort((a, b) => b.createdAt - a.createdAt).sort((a, b) => b.transactionDate - a.transactionDate)} />
         </div>
       ) : (
         <p>No transactions to show</p>

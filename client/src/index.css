@@ -56,7 +56,6 @@ svg {
   /* toast customizations */
   --toastify-color-success: hsl(var(--accent));
   --toastify-font-family: 'M PLUS Rounded 1c', sans-serif;
-  /* --toastify-font-size: var(--fs-200); */
   --toastify-font-size: var(--fs-100) !important;
 }
 
@@ -398,6 +397,10 @@ select {
   -ms-flex-pack: center;
   justify-content: center;
   gap: var(--space-lg);
+}
+
+.underline {
+  text-decoration: underline;
 }
 
 .landing div {
