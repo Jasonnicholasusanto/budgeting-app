@@ -1,11 +1,13 @@
 import React from "react";
 
 // helper functions
-import { calculateBudget, fetchData, formatCurrency, formatDateToLocaleString, formatPercentage } from "../helpers";
+import { calculateMoney, formatCurrency, formatDateToLocaleString, formatPercentage } from "../helpers";
 
 const BudgetItem = ({ budget }) => {
     const { id, name, amount, color, dateFrom, dateTo, createdAt } = budget;
-    const spent = calculateBudget(id);
+    const spent = calculateMoney(id);
+
+    console.log(0 / amount);
 
     return (
         <div
@@ -19,10 +21,10 @@ const BudgetItem = ({ budget }) => {
                 <p>{formatCurrency(amount)} Budgeted</p>
             </div>
 
-            <progress max={amount} value={-spent}>
+            <progress max={amount} value={amount + spent}>
                 { spent <= 0
-                    ? formatPercentage((-spent) / amount)
-                    : formatPercentage(0 / amount)
+                    ? formatPercentage((amount + spent) / amount)
+                    : formatPercentage(amount)
                 }
             </progress>
 

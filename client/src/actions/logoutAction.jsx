@@ -12,16 +12,10 @@ export async function logoutAction() {
     key: "userName"
   })
   deleteItem({
-    key: "budgets"
+    key: "plans"
   })
   deleteItem({
     key: "transactions"
-  })
-  deleteItem({
-    key: "expenses"
-  })
-  deleteItem({
-    key: "incomes"
   })
     
   toast.promise(

@@ -465,7 +465,7 @@ select {
   transform: scale(1.03);
 }
 
-.budget-date {
+.plan-date {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;

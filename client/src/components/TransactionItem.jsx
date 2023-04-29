@@ -9,10 +9,10 @@ const TransactionItem = ({ transaction }) => {
 
   const fetcher = useFetcher();
 
-  const budget = getAllMatchingItems({
-    category: "budgets",
+  const plan = getAllMatchingItems({
+    category: "plans",
     key: "id",
-    value: transaction.budgetId,
+    value: transaction.planId,
   })[0];
 
   return (
@@ -28,12 +28,12 @@ const TransactionItem = ({ transaction }) => {
 
       <td>
         <Link
-          to={`/budget/${budget.id}`}
+          to={`/plan/${plan.id}`}
           style={{
-            "--accent": budget.color,
+            "--accent": plan.color,
           }}
         >
-          {budget.name}
+          {plan.name}
         </Link>
       </td>
 

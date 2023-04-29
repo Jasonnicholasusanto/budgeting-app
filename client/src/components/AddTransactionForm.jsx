@@ -8,7 +8,7 @@ import PaymentsIcon from '@mui/icons-material/Payments';
 import recurringExpenseTimeFrames from "../transactionHelpers/Recurring.js";
 import transactionOptions from "../transactionHelpers/TransactionOptions.js";
 
-const AddTransactionForm = ({ budgets }) => {
+const AddTransactionForm = ({ plans }) => {
 
     // useFetcher() prefetches data for a route before it is rendered by React, allowing your application to load faster and provide a smoother user experience.
     const fetcher = useFetcher();
@@ -34,7 +34,7 @@ const AddTransactionForm = ({ budgets }) => {
             <h2 className="h3">
                 Add New {" "}
                 <span className="accent">
-                    {budgets.length === 1 && `${budgets.map((budget) => budget.name)}`}
+                    {plans.length === 1 && `${plans.map((plan) => plan.name)}`}
                 </span>
                 {" "}Transaction
             </h2>
@@ -94,54 +94,54 @@ const AddTransactionForm = ({ budgets }) => {
                     </div>
                 </div>
 
-                <div className="expense-inputs">
-                    <div className="grid-xs">
-                        <label htmlFor="newTransaction">
-                            {transactionOpt} Name*
-                        </label>
-                        <input
-                            type="text"
-                            name="newTransaction"
-                            id="newTransaction"
-                            placeholder="e.g., Cashews"
-                            ref={focusRef}
-                            required
-                        />
-                    </div>
 
-                    <div className="grid-xs">
-                        <label htmlFor="newTransactionAmount">
-                            Amount*
-                        </label>
-                        <input
-                            type="number"
-                            step="0.01"
-                            inputMode="decimal"
-                            name="newTransactionAmount"
-                            id="newTransactionAmount"
-                            placeholder="e.g., $5.50"
-                            required
-                        />
-                    </div>
+                <div className="grid-xs">
+                    <label htmlFor="newTransaction">
+                        {transactionOpt} Name*
+                    </label>
+                    <input
+                        type="text"
+                        name="newTransaction"
+                        id="newTransaction"
+                        placeholder="e.g., Cashews"
+                        ref={focusRef}
+                        required
+                    />
+                </div>
+
+                <div className="grid-xs">
+                    <label htmlFor="newTransactionAmount">
+                        Amount*
+                    </label>
+                    <input
+                        type="number"
+                        step="0.01"
+                        inputMode="decimal"
+                        name="newTransactionAmount"
+                        id="newTransactionAmount"
+                        placeholder="e.g., $5.50"
+                        required
+                    />
                 </div>
                 
-                <div className="budget-date">
-                    <div className="grid-xs" hidden={budgets.length === 1}>
-                        <label htmlFor="newTransactionBudget">
-                            Budget Category
+                
+                <div className="plan-date">
+                    <div className="grid-xs" hidden={plans.length === 1}>
+                        <label htmlFor="newTransactionPlan">
+                            Plan Category
                         </label>
                         <select 
-                            name="newTransactionBudget"
-                            id="newTransactionBudget"
+                            name="newTransactionPlan"
+                            id="newTransactionPlan"
                             required
                         >
                             {
-                                budgets
+                                plans
                                     .sort((a, b) => a.createdAt - b.createdAt)
-                                    .map((budget) => {
+                                    .map((plan) => {
                                         return (
-                                            <option key={budget.id} value={budget.id}>
-                                                {budget.name}
+                                            <option key={plan.id} value={plan.id}>
+                                                {plan.name}
                                             </option>
                                         )
                                     })

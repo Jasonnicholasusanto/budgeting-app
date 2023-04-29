@@ -25,19 +25,20 @@ export const deleteItem = ({ key, id }) => {
     return localStorage.removeItem(key);
   };
 
-// Generates random color for the budget's border
+// Generates random color for the plan's border
 const generateRandomColor = () => {
-    const existingBudgetLength = fetchData("budgets")?.length ?? 0;
-    return `${existingBudgetLength * 36} 65% 50%`
+    const existingPlanLength = fetchData("plans")?.length ?? 0;
+    return `${existingPlanLength * 36} 65% 50%`
 }
 
 export const waitPromise = () => new Promise(res => setTimeout(res, Math.random() * 1500));
 
-// create a new budget
-export const createBudget = ({ name, amount, dateFrom, dateTo }) => {
+// Create a new plan
+export const createPlan = ({ name, amount, dateFrom, dateTo, planType }) => {
     
     const newItem = {
         id: crypto.randomUUID(),
+        planType: planType,
         name: name,
         createdAt: Date.now(),
         amount: +amount,
@@ -46,15 +47,15 @@ export const createBudget = ({ name, amount, dateFrom, dateTo }) => {
         dateTo: new Date(dateTo)
     }
 
-    const existingBudgets = fetchData("budgets") ?? [];
+    const existingPlans = fetchData("plans") ?? [];
 
-    return localStorage.setItem("budgets",
-        JSON.stringify([...existingBudgets, newItem]));
+    return localStorage.setItem("plans",
+        JSON.stringify([...existingPlans, newItem]));
 }
 
 // Creates new transaction
 export const createTransaction = ({
-    transactionType, recurring, name, amount, budgetId, transactionDate
+    transactionType, recurring, name, amount, planId, transactionDate
   }) => {
     const [month, day, year] = transactionDate.split('/').map(Number);
     const dateObject = new Date(year, month - 1, day);
@@ -68,7 +69,7 @@ export const createTransaction = ({
         createdAt: Date.now(),
         transactionDate: epochTime,
         amount: +amount,
-        budgetId: budgetId
+        planId: planId
     }
 
     const existingTransactions = fetchData("transactions") ?? [];
@@ -77,38 +78,14 @@ export const createTransaction = ({
 
 }
 
-// total spent by budget
-// export const calculateSpentByBudget = (budgetId) => {
-//     const expenses = fetchData("expenses") ?? [];
-//     const transactions = fetchData("incomes") ?? [];
-
-//     const budgetSpent = expenses.reduce((exp, expense) => {
-//       // check if expense.id === budgetId I passed in
-//       if (expense.budgetId !== budgetId) return exp
-  
-//       // add the current amount to my total
-//       return exp += expense.amount;
-//     }, 0);
-
-//     const incomeReceived = transactions.reduce((inc, income) => {
-
-//         if (income.budgetId !== budgetId) return inc
-
-//         return inc += income.amount;
-//     }, 0);
-
-//     const total = incomeReceived - budgetSpent;
-    
-//     return total;
-// }
-
-export const calculateBudget = (budgetId) => {
+// This function calculates the spendings in a budget
+export const calculateMoney = (planId) => {
     const transactions = fetchData("transactions") ?? [];
     var incomes = 0;
     var expenses = 0;
 
     for(var i=0; i< transactions.length; i++){
-        if(transactions[i].budgetId === budgetId){
+        if(transactions[i].planId === planId){
             if(transactions[i].transactionType === "Expense"){
                 expenses += transactions[i].amount;
             } else {
