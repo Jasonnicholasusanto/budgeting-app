@@ -11,7 +11,8 @@ import SavingItem from "../components/SavingItem";
 import Table from "../components/Table";
 
 // helpers
-import { createTransaction, deleteItem, getAllMatchingItems } from "../helpers";
+import { createTransaction, deleteItem, editPlan, getAllMatchingItems } from "../helpers";
+import currencies from "../dashboardHelpers/Currencies";
 
 // loader
 export async function planLoader({ params }) {
@@ -69,6 +70,24 @@ export async function planAction({ request }) {
       throw new Error("There was a problem deleting the transaction.");
     }
   }
+
+  // Editing a plan
+  if (_action === "editPlan") {
+    try {
+      editPlan({
+        id: values.id,
+        name: values.newPlan,
+        amount: values.newPlanAmount,
+        dateFrom: values.dateFrom,
+        dateTo: values.dateTo,
+      })
+
+      return toast.success(`Plan has been edited!`);
+
+    } catch (e) {
+      throw new Error("There was a problem editing your plan.");
+    }
+  }
 }
 
 const PlanPage = () => {
@@ -97,7 +116,7 @@ const PlanPage = () => {
       {transactions && transactions.length > 0 && (
         <div className="grid-md">
           <h2>
-            <span className="accent">{plan.name}'s</span> Transactions
+            <span className="accent">{plan.name}</span> Transactions
           </h2>
           <Table transactions={transactions} showBudget={false} />
         </div>

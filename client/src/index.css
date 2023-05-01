@@ -55,15 +55,14 @@ svg {
 
   /* toast customizations */
   --toastify-color-success: hsl(var(--accent));
-  --toastify-font-family: 'M PLUS Rounded 1c', sans-serif;
+  /* --toastify-font-family: 'M PLUS Rounded 1c', sans-serif; */
+  --toastify-font-family: font-family: 'Quicksand', sans-serif;
   --toastify-font-size: var(--fs-100) !important;
 }
 
 body {
-  /* font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif; */
-
-  font-family: 'M PLUS Rounded 1c', sans-serif;
+  /* font-family: 'M PLUS Rounded 1c', sans-serif; */
+  font-family: 'Quicksand', sans-serif;
   font-size: var(--fs-400);
   line-height: var(--lh-1-4);
   font-weight: 400;
@@ -91,6 +90,7 @@ h6 {
 h1,
 .h1 {
   font-size: var(--fs-600);
+  font-weight: bold;
 }
 
 h2,
@@ -403,11 +403,27 @@ select {
   text-decoration: underline;
 }
 
+.floating { 
+  animation-name: floating;
+  animation-duration: 4s;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
+  /* margin-left: 3ch; */
+  /* margin-top: 5px; */
+}
+
+@keyframes floating {
+  0% { transform: translate(0,  0px); }
+  50%  { transform: translate(0, -50px); }
+  100%   { transform: translate(0, -0px); }   
+}
+
 .landing div {
   display: -ms-grid;
   display: grid;
   gap: var(--space-sm);
-  /* max-width: var(--content-sm); */
+  /* max-width: var(--content); */
+  max-width: 50ch;
 }
 
 .landing form {
@@ -415,7 +431,26 @@ select {
   display: grid;
   gap: var(--space-sm);
   /* max-width: 25ch; */
-  max-width: 35ch;
+  max-width: 40ch;
+}
+
+.typed {
+  overflow: hidden;
+  white-space: nowrap;
+  border-right: 2px solid;
+  width: 0;
+  animation: typing 1.5s steps(30, end) forwards, blinking 1s infinite;
+}
+  
+@keyframes typing {
+  from { width: 0 }
+  to { width: 100% }
+}
+
+@keyframes blinking {
+  0% {border-color: transparent}
+  50% {border-color: black}
+  100% {border-color: transparent}
 }
 
 /* dashboard */

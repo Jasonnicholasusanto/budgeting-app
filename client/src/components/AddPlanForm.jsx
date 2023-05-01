@@ -8,7 +8,7 @@ import "react-datepicker/dist/react-datepicker.css";
 
 import PlanTypes from "../planHelpers/PlanTypes.js";
 
-const AddPlanForm = () => {
+const AddPlanForm = ({ currency }) => {
 
     const [planType, setPlanType] = useState("Budget");
 
@@ -44,6 +44,13 @@ const AddPlanForm = () => {
                 className="grid-sm"
                 ref={formRef}
             >
+                <input
+                    id="currency"
+                    type="hidden"
+                    name="currency" 
+                    defaultValue={currency}
+                />
+
                 <div className="grid-xs">
                     <label htmlFor="newPlanType">Plan Type</label>
                     <select 

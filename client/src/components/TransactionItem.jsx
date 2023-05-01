@@ -20,8 +20,8 @@ const TransactionItem = ({ transaction, showPlan }) => {
       <td>{transaction.name}</td>
 
       { transaction.transactionType === "Expense"
-        ? <td style={{color: "#dd0426"}}>{symbol}{formatCurrency(transaction.amount)}</td>
-        : <td style={{color: "#38b000"}}>{symbol}{formatCurrency(transaction.amount)}</td>
+        ? <td style={{color: "#dd0426"}}>{symbol}{formatCurrency(transaction.amount, transaction.currency)}</td>
+        : <td style={{color: "#38b000"}}>{symbol}{formatCurrency(transaction.amount, transaction.currency)}</td>
       }
 
       <td>{formatDateToLocaleString(transaction.transactionDate)}</td>

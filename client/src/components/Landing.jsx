@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 
 import { Form, useFetcher } from "react-router-dom";
 
@@ -6,7 +6,9 @@ import { Form, useFetcher } from "react-router-dom";
 import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
 
 // assets
-import illustration from "../assets/illustration.jpg"
+import cash from "../assets/3d-money-bundle.png";
+
+import currencies from "../dashboardHelpers/Currencies.js";
 
 const Landing = () => {
 
@@ -14,14 +16,13 @@ const Landing = () => {
     const isSubmitting = fetcher.state === "submitting";
     const formRef = useRef();
 
+    const [currencyChoice, setCurrencyChoice] = useState("USD");
+
     return (
         <div className="landing">
             <div>
                 <h1>
-                    {/* Say hello to <span className="accent">Financial Success</span> */}
-                   {/* Take Charge of <span className="accent">Your Finances</span> */}
-                   {/* Don't go nuts, plan with <span className="accent">CashU</span> */}
-                   Spend your <span className="accent">CASHews</span> wisely.
+                    Spend your <span className="accent">CASHews</span> wisely.
                 </h1>
                 
                 <p>
@@ -32,19 +33,50 @@ const Landing = () => {
                     method="post"
                     ref={formRef}
                 >
+                    <label htmlFor='name'>What is your name?</label>
                     <input
                         type="text"
                         name="userName"
                         required
-                        placeholder="What is your name?" 
+                        placeholder="Name" 
                         aria-label="Your Name" 
                         autoComplete="given-name"
                     />
+
+                    <label htmlFor="currency">Currency Choice</label>
+                    <select 
+                        name="currency"
+                        id="currency"
+                        value={currencyChoice}
+                        onChange={(e) => setCurrencyChoice(e.target.value)}
+                        required                        
+                    >
+                        {
+                            currencies
+                                .map((currency) => {
+                                    return (
+                                        <option key={currency.id} value={currency.value}>
+                                            {currency.title}
+                                        </option>
+                                    )
+                                })
+                        }
+                    </select>
+
+                    {/* <input
+                        type="text"
+                        name="email"
+                        required
+                        placeholder="What is your email?" 
+                        aria-label="Your Email" 
+                        autoComplete="email"
+                    /> */}
 
                     <input 
                         type="hidden" 
                         name="_action" 
                         value="newUser" 
+                        hidden
                     />
 
                     <button 
@@ -64,7 +96,7 @@ const Landing = () => {
                 </fetcher.Form>
             </div>
 
-            {/* <img src={illustration} alt="Person with money" width={600} /> */}
+            <img src={cash} alt="" className="floating" width={600} />
         </div>
     )
 }

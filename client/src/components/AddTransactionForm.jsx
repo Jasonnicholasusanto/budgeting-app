@@ -8,7 +8,7 @@ import PaymentsIcon from '@mui/icons-material/Payments';
 import recurringExpenseTimeFrames from "../transactionHelpers/Recurring.js";
 import transactionOptions from "../transactionHelpers/TransactionOptions.js";
 
-const AddTransactionForm = ({ plans }) => {
+const AddTransactionForm = ({ plans, currency }) => {
 
     // useFetcher() prefetches data for a route before it is rendered by React, allowing your application to load faster and provide a smoother user experience.
     const fetcher = useFetcher();
@@ -44,6 +44,13 @@ const AddTransactionForm = ({ plans }) => {
                 className="grid-sm"
                 ref={formRef}
             >
+
+                <input
+                    id="currency"
+                    type="hidden"
+                    name="currency" 
+                    defaultValue={currency}
+                />
 
                 <div className="expense-inputs">
                     <div className="grid-xs">

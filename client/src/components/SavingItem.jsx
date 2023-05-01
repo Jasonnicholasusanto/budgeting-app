@@ -1,18 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
+import { Form, Link } from "react-router-dom";
 
 // helper functions
 import { calculateMoney, formatCurrency, formatDateToLocaleString, formatPercentage } from "../helpers";
 
 // Icon imports
 import DeleteIcon from '@mui/icons-material/Delete';
+import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import InfoIcon from '@mui/icons-material/Info';
-import { Form, Link } from "react-router-dom";
+import DoDisturbIcon from '@mui/icons-material/DoDisturb';
+import EditPlanForm from "./EditPlanForm";
 
 const SavingItem = ({ saving, showDelete = false }) => {
-    const { id, name, amount, color, dateFrom, dateTo, createdAt } = saving;
+    const { id, planType, name, amount, color, dateFrom, dateTo, createdAt, currency } = saving;
     const saved = calculateMoney(id);
 
-    console.log(saved);
+    const [showEdit, setShowEdit] = useState(false);
 
     return (
         <div
@@ -23,7 +26,7 @@ const SavingItem = ({ saving, showDelete = false }) => {
         >
             <div className="progress-text">
                 <h3>{name}</h3>
-                <p>{formatCurrency(amount)} Savings Goal</p>
+                <p>{formatCurrency(amount, currency)} Savings Goal</p>
             </div>
 
             <progress max={amount} value={saved}>
@@ -36,13 +39,13 @@ const SavingItem = ({ saving, showDelete = false }) => {
             <div className="progress-text">
                 { saved <= 0
                     ?   ( saved === 0 
-                            ? <small>{formatCurrency(saved)} deficit </small>
-                            : <small>{formatCurrency(-saved)} deficit </small>
+                            ? <small>{formatCurrency(saved, currency)} deficit </small>
+                            : <small>{formatCurrency(-saved, currency)} deficit </small>
                         )   
-                    : <small>{formatCurrency(saved)} saved </small>
+                    : <small>{formatCurrency(saved, currency)} saved </small>
                 }
 
-            <small>{formatCurrency(amount - saved)} remaining</small>
+            <small>{formatCurrency(amount - saved, currency)} remaining</small>
                 
             </div>
             
@@ -57,34 +60,56 @@ const SavingItem = ({ saving, showDelete = false }) => {
             }
 
             {showDelete ? (
-                <div className="flex-sm">
-                    <Form
-                        method="post"
-                        action="delete"
-                        onSubmit={(event) => {
-                        if (
-                            !confirm(
-                            "Are you sure you want to permanently delete this saving plan?"
-                            )
-                        ) {
-                            event.preventDefault();
-                        }
-                        }}
-                    >
-                        <button type="submit" className="btn">
-                            <span>Delete Saving</span>
-                            <DeleteIcon width={20} />
+                !showEdit && 
+                    <div className="flex-sm">
+                        <Form
+                            method="post"
+                            action="delete"
+                            onSubmit={(event) => {
+                            if (
+                                !confirm(
+                                "Are you sure you want to permanently delete this saving plan?"
+                                )
+                            ) {
+                                event.preventDefault();
+                            }
+                            }}
+                        >
+                            <button type="submit" className="btn">
+                                <span>Delete Saving</span>
+                                <DeleteIcon width={20} />
+                            </button>
+                        </Form>
+
+                        <button type="submit" onClick={() => setShowEdit(!showEdit)} className="btn">
+                            <span>Edit Saving</span>
+                            <ModeEditIcon width={20} />
                         </button>
-                    </Form>
+                    </div>
+                ) : (
+                    <div className="flex-sm">
+                        <Link to={`/saving/${id}`} className="btn">
+                            <span>View Details</span>
+                            <InfoIcon width={20} />
+                        </Link>
+                    </div>
+                )
+            }
+
+            {showEdit && 
+                <div>
+                    <EditPlanForm setShowEdit={setShowEdit} id={id} planType={planType} name={name} amount={amount} color={color} dateFrom={dateFrom} dateTo={dateTo} createdAt={createdAt}/>
+                    
+                    <button
+                        className="btn btn--warning"
+                        onClick={() => setShowEdit(false)}
+                        style={{marginTop: "1ch"}}
+                    >
+                        <span>Cancel Edit</span>
+                        <DoDisturbIcon width={20} />
+                    </button>
                 </div>
-            ) : (
-                <div className="flex-sm">
-                    <Link to={`/saving/${id}`} className="btn">
-                        <span>View Details</span>
-                        <InfoIcon width={20} />
-                    </Link>
-                </div>
-            )}
+            }
         </div>
     )
 }

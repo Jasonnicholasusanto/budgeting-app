@@ -1,16 +1,25 @@
-import React from "react";
+import React, { useState } from "react";
+import { Form, Link } from "react-router-dom";
 
 // helper functions
-import { calculateMoney, formatCurrency, formatDateToLocaleString, formatPercentage } from "../helpers";
+import { calculateMoney, formatCurrency, formatDateToLocaleString, formatPercentage, getDaysBetweenDates } from "../helpers";
 
 // Icon imports
 import DeleteIcon from '@mui/icons-material/Delete';
+import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import InfoIcon from '@mui/icons-material/Info';
-import { Form, Link } from "react-router-dom";
+import DoDisturbIcon from '@mui/icons-material/DoDisturb';
+
+import EditPlanForm from "./EditPlanForm";
 
 const BudgetItem = ({ budget, showDelete = false }) => {
-    const { id, name, amount, color, dateFrom, dateTo, createdAt } = budget;
+    const { id, planType, name, amount, color, dateFrom, dateTo, createdAt, currency } = budget;
+
     const spent = calculateMoney(id);
+
+    const numDays = getDaysBetweenDates(dateFrom, dateTo);
+
+    const [showEdit, setShowEdit] = useState(false);
 
     return (
         <div
@@ -21,7 +30,7 @@ const BudgetItem = ({ budget, showDelete = false }) => {
         >
             <div className="progress-text">
                 <h3>{name}</h3>
-                <p>{formatCurrency(amount)} Budgeted</p>
+                <p>{formatCurrency(amount, currency)} Budgeted</p>
             </div>
 
             <progress max={amount} value={amount + spent}>
@@ -34,13 +43,13 @@ const BudgetItem = ({ budget, showDelete = false }) => {
             <div className="progress-text">
                 { spent <= 0
                     ?   ( spent === 0 
-                            ? <small>{formatCurrency(spent)} spent </small>
-                            : <small>{formatCurrency(-spent)} spent </small>
+                            ? <small>{formatCurrency(spent, currency)} spent </small>
+                            : <small>{formatCurrency(-spent, currency)} spent </small>
                         )   
-                    : <small>{formatCurrency(spent)} surplus </small>
+                    : <small>{formatCurrency(spent, currency)} surplus </small>
                 }
 
-                <small>{formatCurrency(amount + spent)} remaining</small>
+                <small>{formatCurrency(amount + spent, currency)} remaining</small>
                 
             </div>
             
@@ -54,27 +63,37 @@ const BudgetItem = ({ budget, showDelete = false }) => {
                 </div>
             }
 
+            { (numDays !== null && showDelete) &&
+                <small style={{marginTop: "2ch"}}>You have approximately {formatCurrency((amount+spent)/numDays, currency)} per day</small>
+            }
+
             {showDelete ? (
-                <div className="flex-sm">
-                    <Form
-                        method="post"
-                        action="delete"
-                        onSubmit={(event) => {
-                        if (
-                            !confirm(
-                            "Are you sure you want to permanently delete this budgeting plan?"
-                            )
-                        ) {
-                            event.preventDefault();
-                        }
-                        }}
-                    >
-                        <button type="submit" className="btn">
-                            <span>Delete Budget</span>
-                            <DeleteIcon width={20} />
+                !showEdit && 
+                    <div className="flex-sm">
+                        <Form
+                            method="post"
+                            action="delete"
+                            onSubmit={(event) => {
+                                if (
+                                    !confirm(
+                                    "Are you sure you want to permanently delete this budgeting plan?"
+                                    )
+                                ) {
+                                    event.preventDefault();
+                                }
+                            }}
+                        >
+                            <button type="submit" className="btn">
+                                <span>Delete Budget</span>
+                                <DeleteIcon width={20} />
+                            </button>
+                        </Form>
+
+                        <button type="submit" onClick={() => setShowEdit(!showEdit)} className="btn">
+                            <span>Edit Budget</span>
+                            <ModeEditIcon width={20} />
                         </button>
-                    </Form>
-                </div>
+                    </div>
             ) : (
                 <div className="flex-sm">
                     <Link to={`/budget/${id}`} className="btn">
@@ -83,6 +102,21 @@ const BudgetItem = ({ budget, showDelete = false }) => {
                     </Link>
                 </div>
             )}
+
+            {showEdit && 
+                <div>
+                    <EditPlanForm setShowEdit={setShowEdit} id={id} planType={planType} name={name} amount={amount} color={color} dateFrom={dateFrom} dateTo={dateTo} createdAt={createdAt}/>
+                    
+                    <button
+                        className="btn btn--warning"
+                        onClick={() => setShowEdit(false)}
+                        style={{marginTop: "1ch"}}
+                    >
+                        <span>Cancel Edit</span>
+                        <DoDisturbIcon width={20} />
+                    </button>
+                </div>
+            }
         </div>
     )
 }

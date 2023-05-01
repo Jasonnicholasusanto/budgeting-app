@@ -9,7 +9,7 @@ export async function logoutAction() {
   
   // deleting the user
   deleteItem({
-    key: "userName"
+    key: "users"
   })
   deleteItem({
     key: "plans"

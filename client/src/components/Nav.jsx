@@ -7,17 +7,28 @@ import DeleteIcon from '@mui/icons-material/Delete';
 // assets
 // import logomark from "../assets/logomark.svg"
 import logo from "../assets/logo.svg";
+import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
 
 const Nav = ({ userName }) => {
   return (
     <nav>
-      <NavLink
-        to="/"
-        aria-label="Go to home"
-      >
-        <img src={logo} alt="" height={30} />
-        <span>CashU</span>
-      </NavLink>
+      <>
+        <NavLink
+          to="/"
+          aria-label="Go to home"
+        >
+          <img src={logo} alt="" height={30} />
+          <span>CashU</span>
+        </NavLink>
+
+        {/* <NavLink
+          to="/"
+          aria-label="About us"
+        >
+          <EmojiPeopleIcon width={20}/>
+          <span>About Us</span>
+        </NavLink> */}
+      </>
 
       {/* This section is for a button deleting user. */}
       {
