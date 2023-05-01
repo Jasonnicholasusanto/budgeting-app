@@ -118,7 +118,7 @@ const PlanPage = () => {
           <h2>
             <span className="accent">{plan.name}</span> Transactions
           </h2>
-          <Table transactions={transactions} showBudget={false} />
+          <Table transactions={transactions.sort((a, b) => b.createdAt - a.createdAt).sort((a, b) => b.transactionDate - a.transactionDate)} showBudget={false} />
         </div>
       )}
 
