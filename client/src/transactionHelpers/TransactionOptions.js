@@ -6,7 +6,11 @@ const transactionOptions = [
     {
         id: 1,
         title: "Income"
-    }
+    },
+    {
+        id: 2,
+        title: "Subscription"
+    },
 ]
 
 export default transactionOptions;

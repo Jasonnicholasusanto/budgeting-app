@@ -1,5 +1,5 @@
 // helper imports
-import React from "react";
+import React, { useState } from "react";
 import { Link, useFetcher } from "react-router-dom";
 import { formatCurrency, formatDateToLocaleString, getAllMatchingItems } from "../helpers"
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -19,9 +19,16 @@ const TransactionItem = ({ transaction, showPlan }) => {
     <>
       <td>{transaction.name}</td>
 
-      { transaction.transactionType === "Expense"
-        ? <td style={{color: "#dd0426"}}>{symbol}{formatCurrency(transaction.amount, transaction.currency)}</td>
-        : <td style={{color: "#38b000"}}>{symbol}{formatCurrency(transaction.amount, transaction.currency)}</td>
+      { transaction.transactionType === "Expense" && 
+        <td style={{color: "#dd0426"}}>{symbol}{formatCurrency(transaction.amount, transaction.currency)}</td>
+      }
+
+      { transaction.transactionType === "Income" &&
+        <td style={{color: "#38b000"}}>{symbol}{formatCurrency(transaction.amount, transaction.currency)}</td>
+      }
+
+      { transaction.transactionType === "Subscription" &&
+        <td style={{color: "black"}}>{formatCurrency(transaction.amount, transaction.currency)}</td>
       }
 
       <td>{formatDateToLocaleString(transaction.transactionDate)}</td>

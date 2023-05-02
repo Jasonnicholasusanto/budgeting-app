@@ -109,6 +109,12 @@ export const createTransaction = ({
 
 }
 
+export const getSubscriptions = (transactions) => {
+    const subscriptions = transactions.filter(transaction => transaction.transactionType === "Subscription");
+
+    return subscriptions;
+}
+
 // This function calculates the spendings in a budget
 export const calculateMoney = (planId) => {
     const transactions = fetchData("transactions") ?? [];

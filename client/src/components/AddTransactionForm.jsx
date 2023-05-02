@@ -77,28 +77,30 @@ const AddTransactionForm = ({ plans, currency }) => {
                         </select>
                     </div>
 
-                    <div className="grid-xs">
-                        <label htmlFor="recurringTransaction">
-                            Recurring {transactionOpt}
-                        </label>
-                        <select 
-                            name="recurringTransaction"
-                            id="recurringTransaction"
-                            required
-                            disabled
-                        >
-                            {
-                                recurringExpenseTimeFrames
-                                    .map((options) => {
-                                        return (
-                                            <option key={options.id} value={options.value}>
-                                                {options.title}
-                                            </option>
-                                        )
-                                    })
-                            }
-                        </select>
-                    </div>
+                    {transactionOpt === "Subscription" &&
+                        <div className="grid-xs">
+                            <label htmlFor="recurringTransaction">
+                                Recurring {transactionOpt}
+                            </label>
+                            <select 
+                                name="recurringTransaction"
+                                id="recurringTransaction"
+                                required
+                                disabled
+                            >
+                                {
+                                    recurringExpenseTimeFrames
+                                        .map((options) => {
+                                            return (
+                                                <option key={options.id} value={options.value}>
+                                                    {options.title}
+                                                </option>
+                                            )
+                                        })
+                                }
+                            </select>
+                        </div>
+                    }
                 </div>
 
 

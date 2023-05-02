@@ -12,7 +12,7 @@ import AddTransactionForm from "../components/AddTransactionForm.jsx";
 import Table from "../components/Table";
 
 //  helper functions
-import { createPlan, createTransaction, createUser, deleteItem, fetchData, waitPromise } from "../helpers.js";
+import { createPlan, createTransaction, createUser, deleteItem, fetchData, getSubscriptions, waitPromise } from "../helpers.js";
 import BudgetItem from "../components/BudgetItem.jsx";
 import SavingItem from "../components/SavingItem.jsx";
 import { getAllMatchingItems } from "../helpers.js";
@@ -105,6 +105,8 @@ export async function dashboardAction({ request }) {
 const Dashboard = () => {
   const { user, plans, transactions } = useLoaderData();
 
+  const subscriptions = getSubscriptions(transactions);
+
   const [userName, setUserName] = useState(null);
   const [currencyChoice, setCurrencyChoice] = useState(null);
 
@@ -163,11 +165,27 @@ const Dashboard = () => {
                     }
 
                     {
+                      subscriptions && subscriptions.length > 0 && (
+                        <div className="grid-md">
+                          <h2>Your subscriptions</h2>
+                          <Table transactions={
+                            subscriptions.sort((a, b) => b.createdAt - a.createdAt).sort((a, b) => b.transactionDate - a.transactionDate).slice(0, 8)
+                          }/>
+                          {subscriptions.length > 8 && (
+                            <Link to="subscriptions" className="btn btn--dark">
+                              View all subscriptions
+                            </Link>
+                          )}
+                        </div>
+                      )
+                    }
+
+                    {
                       transactions && transactions.length > 0 && (
                         <div className="grid-md">
-                          <h2>Recent Transactions</h2>
+                          <h2>Your Transactions</h2>
                           <Table transactions={
-                            transactions.sort((a, b) => b.createdAt - a.createdAt).sort((a, b) => b.transactionDate - a.transactionDate).slice(0, 8)
+                            transactions.filter(transaction => (transaction.transactionType === "Expense" || transaction.transactionType === "Income")).sort((a, b) => b.createdAt - a.createdAt).sort((a, b) => b.transactionDate - a.transactionDate).slice(0, 8)
                           }/>
                           {transactions.length > 8 && (
                             <Link to="transactions" className="btn btn--dark">
