@@ -108,7 +108,7 @@ const EditPlanForm = ({ setShowEdit, id, planType, name, amount, color, dateFrom
                 <div className="grid-xs">
                     <label htmlFor="Date">New Dates <span className="textReducedOpacity">&#40;not required&#41;</span></label>
 
-                    <div className="plan-date">
+                    <div className="form-flex">
                         <DatePicker 
                             selected={startDate} 
                             onChange={(date) => setStartDate(date)} 

@@ -8,7 +8,7 @@ import PaymentsIcon from '@mui/icons-material/Payments';
 import recurringExpenseTimeFrames from "../transactionHelpers/Recurring.js";
 import transactionOptions from "../transactionHelpers/TransactionOptions.js";
 
-const AddTransactionForm = ({ plans, currency }) => {
+const AddTransactionForm = ({ planPage = false, assetPage = false, plans, assets, currency }) => {
 
     // useFetcher() prefetches data for a route before it is rendered by React, allowing your application to load faster and provide a smoother user experience.
     const fetcher = useFetcher();
@@ -33,9 +33,17 @@ const AddTransactionForm = ({ plans, currency }) => {
         <div className="form-wrapper">
             <h2 className="h3">
                 Add New {" "}
-                <span className="accent">
-                    {plans.length === 1 && `${plans.map((plan) => plan.name)}`}
-                </span>
+                {plans &&
+                    <span className="accent">
+                        {(planPage) && `${plans.map((plan) => plan.name)}`}
+                    </span>
+                }
+
+                {assets &&
+                    <span className="accent">
+                        {(assetPage) && `${assets.map((asset) => asset.name)}`}
+                    </span>
+                }
                 {" "}Transaction
             </h2>
 
@@ -117,47 +125,23 @@ const AddTransactionForm = ({ plans, currency }) => {
                         required
                     />
                 </div>
-
-                <div className="grid-xs">
-                    <label htmlFor="newTransactionAmount">
-                        Amount*
-                    </label>
-                    <input
-                        type="number"
-                        step="0.01"
-                        inputMode="decimal"
-                        name="newTransactionAmount"
-                        id="newTransactionAmount"
-                        placeholder="e.g., $5.50"
-                        required
-                    />
-                </div>
                 
-                
-                <div className="plan-date">
-                    <div className="grid-xs" hidden={plans.length === 1}>
-                        <label htmlFor="newTransactionPlan">
-                            Plan Category
+                <div className="form-flex">
+                    <div className="grid-xs">
+                        <label htmlFor="newTransactionAmount">
+                            Amount*
                         </label>
-                        <select 
-                            name="newTransactionPlan"
-                            id="newTransactionPlan"
+                        <input
+                            type="number"
+                            step="0.01"
+                            inputMode="decimal"
+                            name="newTransactionAmount"
+                            id="newTransactionAmount"
+                            placeholder="e.g., $5.50"
                             required
-                        >
-                            {
-                                plans
-                                    .sort((a, b) => a.createdAt - b.createdAt)
-                                    .map((plan) => {
-                                        return (
-                                            <option key={plan.id} value={plan.id}>
-                                                {plan.name}
-                                            </option>
-                                        )
-                                    })
-                            }
-                        </select>
+                        />
                     </div>
-                    
+
                     <div className="grid-xs">
                         <label htmlFor="transactionDate">
                             Transaction Date
@@ -174,6 +158,70 @@ const AddTransactionForm = ({ plans, currency }) => {
                     </div>
                 </div>
 
+                <div className="form-flex">
+                    { (plans && plans.length > 0) &&
+                        <div className="grid-xs" hidden={planPage}>
+                            <label htmlFor="newTransactionPlan">
+                                Plan Category
+                            </label>
+                            <select 
+                                name="newTransactionPlan"
+                                id="newTransactionPlan"
+                                required
+                            >
+                                {
+                                    plans
+                                        .sort((a, b) => a.createdAt - b.createdAt)
+                                        .map((plan) => {
+                                            return (
+                                                <option key={plan.id} value={plan.id}>
+                                                    {plan.name}
+                                                </option>
+                                            )
+                                        })
+                                }
+
+                                { (assets && assets.length > 0) &&
+                                    <option key={"none"} value={"none"}>
+                                        None
+                                    </option>
+                                }
+                            </select>
+                        </div>
+                    }
+
+                    { (assets && assets.length > 0) &&
+                        <div className="grid-xs" hidden={assetPage}>
+                            <label htmlFor="newTransactionAsset">
+                                Asset Category
+                            </label>
+                            <select 
+                                name="newTransactionAsset"
+                                id="newTransactionAsset"
+                                required
+                            >
+                                {/* { (plans && plans.length > 0) &&
+                                    <option key={"none"} value={"none"}>
+                                        None
+                                    </option>
+                                } */}
+
+                                {
+                                    assets
+                                        .sort((a, b) => a.createdAt - b.createdAt)
+                                        .map((asset) => {
+                                            return (
+                                                <option key={asset.id} value={asset.id}>
+                                                    {asset.name}
+                                                </option>
+                                            )
+                                        })
+                                }
+                            </select>
+                        </div>
+                    }
+                </div>
+
                 <input 
                     type="hidden"
                     name="_action"
@@ -184,7 +232,6 @@ const AddTransactionForm = ({ plans, currency }) => {
                     type="submit" 
                     className="btn btn--dark"
                     disabled={isSubmitting}
-                    // onSubmit={() => resetDates()}
                 >
                     {
                         isSubmitting 

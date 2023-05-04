@@ -11,7 +11,31 @@ export const fetchData = (key) => {
 export const getAllMatchingItems = ({ category, key, value }) => {
     const data = fetchData(category) ?? [];
     return data.filter((item) => item[key] === value);
-  };
+};
+
+// Update all matching items from local storage
+export const updateAllMatchingItems = ({ category, key, value, updatedItems }) => {
+    try {
+        const items = JSON.parse(localStorage.getItem(category));
+    
+        const updatedItemsIndex = items.reduce((acc, item, index) => {
+            if (item[key] === value) {
+            acc.push(index);
+            }
+            return acc;
+        }, []);
+    
+        updatedItemsIndex.forEach(index => {
+            items[index] = updatedItems.find(item => item.id === items[index].id);
+        });
+    
+        localStorage.setItem(category, JSON.stringify(items));
+    } catch (e) {
+        console.error(e);
+        throw new Error("There was a problem updating items.");
+    }
+}
+  
  
 // delete item
 export const deleteItem = ({ key, id }) => {
@@ -31,88 +55,6 @@ const generateRandomColor = () => {
     const saturation = 55;
     const lightness = 35;
     return `${hue} ${saturation}% ${lightness}%`;
-}
-
-export const waitPromise = () => new Promise(res => setTimeout(res, Math.random() * 1500));
-
-// Creating a new user
-export const createUser = ({ userName, currencyChoice}) => {
-    const newUserItem = {
-        userName: userName,
-        currencyChoice: currencyChoice
-    }
-      
-    const existingUsers = fetchData("users") ?? [];
-
-    return localStorage.setItem("users", JSON.stringify([...existingUsers, newUserItem]));
-}
-
-// Create a new plan
-export const createPlan = ({ name, amount, dateFrom, dateTo, planType, currency }) => {
-    
-    const newItem = {
-        id: crypto.randomUUID(),
-        planType: planType,
-        name: name,
-        createdAt: Date.now(),
-        amount: +amount,
-        color: generateRandomColor(),
-        dateFrom: new Date(dateFrom),
-        dateTo: new Date(dateTo),
-        currency: currency
-    }
-
-    const existingPlans = fetchData("plans") ?? [];
-
-    return localStorage.setItem("plans",
-        JSON.stringify([...existingPlans, newItem]));
-}
-
-// Editing a plan
-export const editPlan = ({ id, name, amount, dateFrom, dateTo }) => {
-
-    const plans = fetchData("plans");
-    const planIndex = plans.findIndex(plan => plan.id === id);
-    
-    plans[planIndex].name = name;
-    plans[planIndex].amount = +amount;
-    plans[planIndex].dateFrom = new Date(dateFrom);
-    plans[planIndex].dateTo = new Date(dateTo);
-
-    // Save the updated "plans" array back to localStorage
-    localStorage.setItem("plans", JSON.stringify(plans));
-}
-
-// Creates new transaction
-export const createTransaction = ({
-    transactionType, recurring, name, amount, planId, transactionDate, currency
-  }) => {
-    const [month, day, year] = transactionDate.split('/').map(Number);
-    const dateObject = new Date(year, month - 1, day);
-    const epochTime = dateObject.getTime();
-
-    const newItem = {
-        id: crypto.randomUUID(),
-        transactionType: transactionType,
-        recurring: recurring,
-        name: name,
-        createdAt: Date.now(),
-        transactionDate: epochTime,
-        amount: +amount,
-        planId: planId,
-        currency: currency
-    }
-
-    const existingTransactions = fetchData("transactions") ?? [];
-
-    return localStorage.setItem("transactions", JSON.stringify([...existingTransactions, newItem]));
-
-}
-
-export const getSubscriptions = (transactions) => {
-    const subscriptions = transactions.filter(transaction => transaction.transactionType === "Subscription");
-
-    return subscriptions;
 }
 
 // This function calculates the spendings in a budget
@@ -136,6 +78,29 @@ export const calculateMoney = (planId) => {
     return total;
 }
 
+// Function to calculate the current balance of a bank account
+export const calculateBalance = (balance, assetId) => {
+    const transactions = fetchData("transactions") ?? [];
+    var incomes = 0;
+    var expenses = 0;
+
+    for(var i=0; i< transactions.length; i++){
+        if(transactions[i].assetId === assetId){
+            if (transactions[i].transactionType === "Expense" || transactions[i].transactionType === "Subscription"){
+                expenses += transactions[i].amount;
+            } else if (transactions[i].transactionType === "Income") {
+                incomes += transactions[i].amount;
+            }
+        }
+    }
+
+    const total = incomes - expenses;
+
+    return balance + total;
+
+}
+
+// Function to get the number of days between dates
 export const getDaysBetweenDates = (dateFrom, dateTo) => {
 
     if(dateFrom === null || dateTo === null){
@@ -147,6 +112,130 @@ export const getDaysBetweenDates = (dateFrom, dateTo) => {
     const toDate = new Date(dateTo);
     const diffDays = Math.round(Math.abs((fromDate - toDate) / oneDay));
     return diffDays;
+}
+
+export const waitPromise = () => new Promise(res => setTimeout(res, Math.random() * 1500));
+
+// Creating a new user
+export const createUser = ({ userName, currencyChoice}) => {
+    const newUserItem = {
+        userName: userName,
+        currencyChoice: currencyChoice
+    }
+      
+    const existingUsers = fetchData("users") ?? [];
+
+    return localStorage.setItem("users", JSON.stringify([...existingUsers, newUserItem]));
+}
+
+// Create a new Asset plan
+export const createAsset = ({ name, assetType, balance, bankName, createdOn, currency, accountNumber, bsbNumber, interestRate}) => {
+    
+    const newItem = {
+        id: crypto.randomUUID(),
+        assetType: assetType,
+        name: name,
+        bankName: bankName,
+        createdOn: createdOn,
+        balance: +balance,
+        color: generateRandomColor(),
+        currency: currency,
+        accountNumber: accountNumber,
+        bsbNumber: bsbNumber,
+        interestRate: interestRate
+    }
+
+    const existingAssets = fetchData("assets") ?? [];
+
+    return localStorage.setItem("assets",
+        JSON.stringify([...existingAssets, newItem]));
+
+}
+
+// Create a new plan
+export const createPlan = ({ name, amount, dateFrom, dateTo, planType, currency }) => {
+    
+    const newItem = {
+        id: crypto.randomUUID(),
+        planType: planType,
+        name: name,
+        createdAt: Date.now(),
+        amount: +amount,
+        color: generateRandomColor(),
+        dateFrom: new Date(dateFrom),
+        dateTo: new Date(dateTo),
+        currency: currency
+    }
+
+    const existingPlans = fetchData("plans") ?? [];
+
+    return localStorage.setItem("plans",
+        JSON.stringify([...existingPlans, newItem]));
+}
+
+// Editing an asset
+export const editAsset = ( {id, name, balance, bankName, interestRate, accountNumber, bsbNumber }) => {
+    const assets = fetchData("assets");
+    const assetIndex = assets.findIndex(asset => asset.id === id);
+    
+    assets[assetIndex].name = name;
+    assets[assetIndex].name = name;
+    assets[assetIndex].balance = +balance;
+    assets[assetIndex].bankName = bankName;
+    assets[assetIndex].interestRate = interestRate;
+    assets[assetIndex].accountNumber = accountNumber;
+    assets[assetIndex].bsbNumber = bsbNumber;
+
+    // Save the updated "plans" array back to localStorage
+    localStorage.setItem("assets", JSON.stringify(assets));
+}
+
+// Editing a plan
+export const editPlan = ({ id, name, amount, dateFrom, dateTo }) => {
+
+    const plans = fetchData("plans");
+    const planIndex = plans.findIndex(plan => plan.id === id);
+    
+    plans[planIndex].name = name;
+    plans[planIndex].amount = +amount;
+    plans[planIndex].dateFrom = new Date(dateFrom);
+    plans[planIndex].dateTo = new Date(dateTo);
+
+    // Save the updated "plans" array back to localStorage
+    localStorage.setItem("plans", JSON.stringify(plans));
+}
+
+// Creates new transaction
+export const createTransaction = ({
+    transactionType, recurring, name, amount, planId, assetId, transactionDate, currency
+  }) => {
+    const [month, day, year] = transactionDate.split('/').map(Number);
+    const dateObject = new Date(year, month - 1, day);
+    const epochTime = dateObject.getTime();
+
+    const newItem = {
+        id: crypto.randomUUID(),
+        transactionType: transactionType,
+        recurring: recurring,
+        name: name,
+        createdAt: Date.now(),
+        transactionDate: epochTime,
+        amount: +amount,
+        planId: planId,
+        assetId: assetId,
+        currency: currency
+    }
+
+    const existingTransactions = fetchData("transactions") ?? [];
+
+    return localStorage.setItem("transactions", JSON.stringify([...existingTransactions, newItem]));
+
+}
+
+export const getSubscriptions = (transactions) => {
+    const subscriptions = (transactions && transactions.length > 0) ? transactions.filter(transaction => transaction.transactionType === 'Subscription') : [];
+
+    return subscriptions;
 }
 
 

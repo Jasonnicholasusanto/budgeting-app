@@ -12,18 +12,20 @@ import AddTransactionForm from "../components/AddTransactionForm.jsx";
 import Table from "../components/Table";
 
 //  helper functions
-import { createPlan, createTransaction, createUser, deleteItem, fetchData, getSubscriptions, waitPromise } from "../helpers.js";
+import { createAsset, createPlan, createTransaction, createUser, deleteItem, fetchData, getSubscriptions, waitPromise } from "../helpers.js";
 import BudgetItem from "../components/BudgetItem.jsx";
 import SavingItem from "../components/SavingItem.jsx";
 import { getAllMatchingItems } from "../helpers.js";
+import AssetItem from "../components/AssetItem.jsx";
 
 // loader to load all the user's data
 export function dashboardLoader() {
   const user = fetchData("users");
   const plans = fetchData("plans");
+  const assets = fetchData("assets");
   const transactions = fetchData("transactions");
 
-  return { user, plans, transactions }
+  return { user, plans, assets, transactions }
 }
 
 // Dashboard actions
@@ -66,6 +68,28 @@ export async function dashboardAction({ request }) {
     }
   }
 
+  // Creating a new Asset plan
+  if (_action === "createAsset") {
+    try {
+      createAsset({
+        name: values.newAsset,
+        assetType: values.newAccountType,
+        balance: values.newBalance,
+        bankName: values.bankName,
+        createdOn: values.createdOn,
+        currency: values.currency,
+        accountNumber: values.accountNumber,
+        bsbNumber: values.bsbNumber,
+        interestRate: values.interestRate
+      })
+
+      return toast.success(`${values.newAsset} Asset created!`);
+
+    } catch (e) {
+      throw new Error("There was a problem creating your asset plan.");
+    }
+  }
+
   // Creating a new transaction
   if (_action === "createTransaction") {
     try {
@@ -74,7 +98,8 @@ export async function dashboardAction({ request }) {
         recurring: values.recurringTransaction,
         name: values.newTransaction,
         amount: values.newTransactionAmount,
-        planId: values.newTransactionPlan,
+        planId: values.newTransactionPlan ? values.newTransactionPlan : "none",
+        assetId: values.newTransactionAsset ? values.newTransactionAsset : "none",
         transactionDate: values.transactionDate,
         currency: values.currency
       })
@@ -103,7 +128,7 @@ export async function dashboardAction({ request }) {
 }
 
 const Dashboard = () => {
-  const { user, plans, transactions } = useLoaderData();
+  const { user, plans, assets, transactions } = useLoaderData();
 
   const subscriptions = getSubscriptions(transactions);
 
@@ -128,13 +153,27 @@ const Dashboard = () => {
     
           <div className="grid-sm">
             {
-              (plans && plans.length) > 0
+              (plans && plans.length || assets && assets.length) > 0
                 ? (
                   <div className="grid-lg">
                     <div className="flex-lg">
                       <AddPlanForm currency={currencyChoice}/>
-                      <AddTransactionForm plans={plans} currency={currencyChoice}/>
+                      <AddTransactionForm assets={assets} plans={plans} currency={currencyChoice}/>
                     </div>
+
+                    {assets && assets.length > 0 && 
+                      <>
+                        <h2>Your Bank Accounts</h2>
+
+                        <div className="budgets">
+                          {
+                            assets.map((asset) => (
+                              <AssetItem key={asset.id} asset={asset} />
+                            ))
+                          }
+                        </div>
+                      </>
+                    }
 
                     {budgets && budgets.length > 0 && 
                       <>
@@ -199,7 +238,7 @@ const Dashboard = () => {
                 )
                 : (
                   <div className="grid-xs">
-                    <p className="introText">Create a budget or savings plan to get started!</p>
+                    <p className="introText">Create a budget, savings, or asset plan to get started!</p>
                     <AddPlanForm currency={currencyChoice}/>
                   </div>
                 )

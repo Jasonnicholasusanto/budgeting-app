@@ -72,7 +72,7 @@ const BudgetItem = ({ budget, showDelete = false }) => {
                     <div className="flex-sm">
                         <Form
                             method="post"
-                            action="delete"
+                            action="delete-plan"
                             onSubmit={(event) => {
                                 if (
                                     !confirm(

@@ -6,6 +6,10 @@ const planTypes = [
     {
         id: 1,
         title: "Saving"
+    },
+    {
+        id: 2,
+        title: "Asset"
     }
 ]
 

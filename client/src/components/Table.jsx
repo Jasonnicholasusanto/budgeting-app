@@ -1,14 +1,28 @@
 // component import
 import TransactionItem from "./TransactionItem"
 
-const Table = ({ transactions, showPlan = true }) => {
+const Table = ({ transactions, showPlan = true, showAsset = true }) => {
   return (
     <div className="table">
       <table>
         <thead>
           <tr>
-            {
-              ["Name", "Amount", "Date", showPlan ? "Plan" : "", "Delete"].map(
+            { (showPlan && !showAsset) && 
+              ["Name", "Amount", "Date", "Plan", "Delete"].map(
+                (i, index) => (
+                  <th key={index}>{i}</th>
+                ))
+            }
+
+            { (showAsset && !showPlan) && 
+              ["Name", "Amount", "Date", "Asset", "Delete"].map(
+                (i, index) => (
+                  <th key={index}>{i}</th>
+                ))
+            }
+
+            { (showAsset && showPlan) && 
+              ["Name", "Amount", "Date", "Plan", "Asset", "Delete"].map(
                 (i, index) => (
                   <th key={index}>{i}</th>
                 ))
@@ -19,7 +33,7 @@ const Table = ({ transactions, showPlan = true }) => {
           {
             transactions.map((transaction) => (
               <tr key={transaction.id}>
-                <TransactionItem transaction={transaction} showPlan={showPlan}/>
+                <TransactionItem transaction={transaction} showPlan={showPlan} showAsset={showAsset}/>
               </tr>
             ))
           }

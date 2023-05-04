@@ -4,7 +4,7 @@ import { Link, useFetcher } from "react-router-dom";
 import { formatCurrency, formatDateToLocaleString, getAllMatchingItems } from "../helpers"
 import DeleteIcon from '@mui/icons-material/Delete';
 
-const TransactionItem = ({ transaction, showPlan }) => {
+const TransactionItem = ({ transaction, showPlan, showAsset }) => {
   const symbol = (transaction.transactionType === "Expense") ? "-" : "+";
 
   const fetcher = useFetcher();
@@ -14,6 +14,14 @@ const TransactionItem = ({ transaction, showPlan }) => {
     key: "id",
     value: transaction.planId,
   })[0];
+
+  const asset = getAllMatchingItems({
+    category: "assets",
+    key: "id",
+    value: transaction.assetId,
+  })[0];
+
+  console.log(transaction.assetId);
 
   return (
     <>
@@ -33,17 +41,42 @@ const TransactionItem = ({ transaction, showPlan }) => {
 
       <td>{formatDateToLocaleString(transaction.transactionDate)}</td>
       
-      { showPlan && 
-        (
-          <td>
-            <Link
-              to={`/${plan.planType.toLowerCase()}/${plan.id}`}
-              style={{
-                "--accent": plan.color,
-              }}
-            >
-              {plan.name}
-            </Link>
+      {showPlan && (
+        (transaction.planId !== "none") 
+          ? (
+            <td>
+              <Link
+                to={`/${plan.planType.toLowerCase()}/${plan.id}`}
+                style={{
+                  "--accent": plan.color,
+                }}
+              >
+                {plan.name}
+              </Link>
+            </td>
+          )
+          : <td>
+            Not allocated
+          </td>
+        )
+      }
+
+      {showAsset && (
+        (transaction.assetId !== "none") 
+          ? (
+            <td>
+              <Link
+                to={`/asset/${asset.id}`}
+                style={{
+                  "--accent": asset.color,
+                }}
+              >
+                {asset.name}
+              </Link>
+            </td>
+          )
+          : <td>
+            Not allocated
           </td>
         )
       }

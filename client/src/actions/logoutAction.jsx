@@ -11,11 +11,17 @@ export async function logoutAction() {
   deleteItem({
     key: "users"
   })
+
   deleteItem({
     key: "plans"
   })
+
   deleteItem({
     key: "transactions"
+  })
+  
+  deleteItem({
+    key: "assets"
   })
     
   toast.promise(

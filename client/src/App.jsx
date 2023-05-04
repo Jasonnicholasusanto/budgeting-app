@@ -13,12 +13,14 @@ import MainLayout, { mainLoader } from "./layouts/MainLayout";
 // Actions imports
 import { logoutAction } from "./actions/logoutAction";
 import { deletePlan } from "./actions/deletePlan";
+import { deleteAsset } from "./actions/deleteAsset";
 
 // Routes
 import Dashboard, { dashboardAction, dashboardLoader } from "./pages/Dashboard";
 import Error from "./pages/Error";
 import TransactionsPage, { transactionsAction, transactionsLoader } from "./pages/TransactionsPage";
 import PlanPage, { planAction, planLoader } from "./pages/PlanPage";
+import AssetPage, { assetAction, assetLoader } from "./pages/AssetPage";
 
 const router = createBrowserRouter([
   {
@@ -35,6 +37,19 @@ const router = createBrowserRouter([
         errorElement: <Error />
       },
       {
+        path: "asset/:id",
+        element: <AssetPage />,
+        loader: assetLoader,
+        action: assetAction,
+        errorElement: <Error />,
+        children: [
+          {
+            path: "delete-asset",
+            action: deleteAsset,
+          },
+        ],
+      },
+      {
         path: "budget/:id",
         element: <PlanPage />,
         loader: planLoader,
@@ -42,7 +57,7 @@ const router = createBrowserRouter([
         errorElement: <Error />,
         children: [
           {
-            path: "delete",
+            path: "delete-plan",
             action: deletePlan,
           },
         ],
@@ -55,7 +70,7 @@ const router = createBrowserRouter([
         errorElement: <Error />,
         children: [
           {
-            path: "delete",
+            path: "delete-plan",
             action: deletePlan,
           },
         ],

@@ -6,39 +6,38 @@ import { toast } from "react-toastify";
 
 // components
 import AddTransactionForm from "../components/AddTransactionForm";
-import BudgetItem from "../components/BudgetItem";
-import SavingItem from "../components/SavingItem";
 import Table from "../components/Table";
 
 // helpers
-import { createTransaction, deleteItem, editPlan, fetchData, getAllMatchingItems, getSubscriptions } from "../helpers";
+import { createTransaction, deleteItem, editAsset, editPlan, fetchData, getAllMatchingItems, getSubscriptions } from "../helpers";
 import currencies from "../dashboardHelpers/Currencies";
+import AssetItem from "../components/AssetItem";
 
 // loader
-export async function planLoader({ params }) {
-  const plan = await getAllMatchingItems({
-    category: "plans",
+export async function assetLoader({ params }) {
+  const asset = await getAllMatchingItems({
+    category: "assets",
     key: "id",
     value: params.id,
   })[0];
 
   const transactions = await getAllMatchingItems({
     category: "transactions",
-    key: "planId",
+    key: "assetId",
     value: params.id,
   });
 
-  const assets = fetchData("assets") ?? [];
+  const plans = fetchData("plans") ?? [];
 
-  if (!plan) {
-    throw new Error("The plan you’re trying to find doesn’t exist");
+  if (!asset) {
+    throw new Error("The asset you’re trying to find doesn’t exist");
   }
 
-  return { plan, assets, transactions };
+  return { plans, asset, transactions };
 }
 
 // action
-export async function planAction({ request }) {
+export async function assetAction({ request }) {
   const data = await request.formData();
   const { _action, ...values } = Object.fromEntries(data);
 
@@ -76,26 +75,29 @@ export async function planAction({ request }) {
   }
 
   // Editing a plan
-  if (_action === "editPlan") {
+  if (_action === "editAsset") {
     try {
-      editPlan({
+      editAsset({
         id: values.id,
-        name: values.newPlan,
-        amount: values.newPlanAmount,
-        dateFrom: values.dateFrom,
-        dateTo: values.dateTo,
+        name: values.newAsset,
+        balance: values.newBalance,
+        assetType: values.newAccountType,
+        bankName: values.bankName,
+        interestRate: values.interestRate,
+        accountNumber: values.accountNumber,
+        bsbNumber: values.bsbNumber
       })
 
-      return toast.success(`Plan has been edited!`);
+      return toast.success(`Asset has been edited!`);
 
     } catch (e) {
-      throw new Error("There was a problem editing your plan.");
+      throw new Error("There was a problem editing your asset.");
     }
   }
 }
 
-const PlanPage = () => {
-  const { plan, assets, transactions } = useLoaderData();
+const AssetPage = () => {
+  const { plans, asset, transactions } = useLoaderData();
 
   const subscriptions = getSubscriptions(transactions);
 
@@ -103,31 +105,30 @@ const PlanPage = () => {
     <div
       className="grid-lg"
       style={{
-        "--accent": plan.color,
+        "--accent": asset.color,
       }}
     >
       <h1 className="h2">
-        <span className="accent">{plan.name}</span> {plan.planType} Overview
+        <span className="accent">{asset.name}</span> Bank Account Overview
       </h1>
 
       <div className="flex-lg">
-        { plan.planType === "Budget" && <BudgetItem key={plan.id} budget={plan} showDelete={true} />}
-        { plan.planType === "Saving" && <SavingItem key={plan.id} saving={plan} showDelete={true} />}
+        <AssetItem key={asset.id} asset={asset} showDelete={true} />
         
-        <AddTransactionForm planPage={true} assets={assets} plans={[plan]} currency={plan.currency}/>
+        <AddTransactionForm assetPage={true} assets={[asset]} plans={plans} currency={asset.currency}/>
       </div>
 
       {subscriptions && subscriptions.length > 0 && (
         <div className="grid-md">
           <h2>
-            <span className="accent">{plan.name}</span> Subscriptions
+            <span className="accent">{asset.name}</span> Subscriptions
           </h2>
           <Table 
             transactions={
               subscriptions.sort((a, b) => b.createdAt - a.createdAt).sort((a, b) => b.transactionDate - a.transactionDate)
             } 
-            showPlan={false} 
-            showAsset={true} 
+            showAsset={false} 
+            showPlan={true} 
           />
         </div>
       )}
@@ -135,14 +136,14 @@ const PlanPage = () => {
       {transactions && transactions.length > 0 && (
         <div className="grid-md">
           <h2>
-            <span className="accent">{plan.name}</span> Transactions
+            <span className="accent">{asset.name}</span> Transactions
           </h2>
           <Table 
             transactions={
               transactions.filter(transaction => (transaction.transactionType === "Expense" || transaction.transactionType === "Income")).sort((a, b) => b.createdAt - a.createdAt).sort((a, b) => b.transactionDate - a.transactionDate)
             } 
-            showPlan={false} 
-            showAsset={true} 
+            showAsset={false} 
+            showPlan={true} 
           />
         </div>
       )}
@@ -150,4 +151,4 @@ const PlanPage = () => {
     </div>
   );
 };
-export default PlanPage;
+export default AssetPage;
