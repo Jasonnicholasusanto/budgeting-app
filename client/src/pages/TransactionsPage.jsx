@@ -9,11 +9,12 @@ import Table from "../components/Table";
 import { toast } from "react-toastify";
 
 // helpers
-import { deleteItem, fetchData } from "../helpers";
+import { deleteItem, fetchData, getTransactions} from "../helpers";
 
 // transactions loader
 export function transactionsLoader() {
-  const transactions = fetchData("transactions");
+  const rawTransactions = fetchData("transactions");
+  const transactions = getTransactions(rawTransactions);
   return { transactions };
 }
 
@@ -24,6 +25,7 @@ export async function transactionsAction({ request }) {
 
   if (_action === "deleteTransaction") {
     try {
+
       deleteItem({
         key: "transactions",
         id: values.transactionId,

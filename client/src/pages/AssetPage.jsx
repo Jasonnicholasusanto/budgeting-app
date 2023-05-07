@@ -9,7 +9,7 @@ import AddTransactionForm from "../components/AddTransactionForm";
 import Table from "../components/Table";
 
 // helpers
-import { createTransaction, deleteItem, editAsset, editPlan, fetchData, getAllMatchingItems, getSubscriptions } from "../helpers";
+import { createTransaction, deleteItem, editAsset, editPlan, fetchData, getAllMatchingItems, getSubscriptions, getTransactions } from "../helpers";
 import currencies from "../dashboardHelpers/Currencies";
 import AssetItem from "../components/AssetItem";
 
@@ -100,6 +100,7 @@ const AssetPage = () => {
   const { plans, asset, transactions } = useLoaderData();
 
   const subscriptions = getSubscriptions(transactions);
+  const filteredTransactions = getTransactions(transactions);
 
   return (
     <div
@@ -133,14 +134,14 @@ const AssetPage = () => {
         </div>
       )}
 
-      {transactions && transactions.length > 0 && (
+      {filteredTransactions && filteredTransactions.length > 0 && (
         <div className="grid-md">
           <h2>
             <span className="accent">{asset.name}</span> Transactions
           </h2>
           <Table 
             transactions={
-              transactions.filter(transaction => (transaction.transactionType === "Expense" || transaction.transactionType === "Income")).sort((a, b) => b.createdAt - a.createdAt).sort((a, b) => b.transactionDate - a.transactionDate)
+              filteredTransactions.sort((a, b) => b.createdAt - a.createdAt).sort((a, b) => b.transactionDate - a.transactionDate)
             } 
             showAsset={false} 
             showPlan={true} 

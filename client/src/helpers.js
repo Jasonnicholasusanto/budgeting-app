@@ -65,9 +65,9 @@ export const calculateMoney = (planId) => {
 
     for(var i=0; i< transactions.length; i++){
         if(transactions[i].planId === planId){
-            if(transactions[i].transactionType === "Expense"){
+            if(transactions[i].transactionType === "Expense" || transactions[i].transactionType === "Subscription"){
                 expenses += transactions[i].amount;
-            } else {
+            } else if (transactions[i].transactionType === "Income") {
                 incomes += transactions[i].amount;
             }
         }
@@ -234,8 +234,12 @@ export const createTransaction = ({
 
 export const getSubscriptions = (transactions) => {
     const subscriptions = (transactions && transactions.length > 0) ? transactions.filter(transaction => transaction.transactionType === 'Subscription') : [];
-
     return subscriptions;
+}
+
+export const getTransactions = (transactions) => {
+    const incomesExpenses = (transactions && transactions.length > 0) ? transactions.filter(transaction => (transaction.transactionType === 'Expense' || transaction.transactionType === 'Income')) : [];
+    return incomesExpenses;
 }
 
 

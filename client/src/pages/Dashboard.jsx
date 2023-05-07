@@ -12,7 +12,7 @@ import AddTransactionForm from "../components/AddTransactionForm.jsx";
 import Table from "../components/Table";
 
 //  helper functions
-import { createAsset, createPlan, createTransaction, createUser, deleteItem, fetchData, getSubscriptions, waitPromise } from "../helpers.js";
+import { createAsset, createPlan, createTransaction, createUser, deleteItem, fetchData, getSubscriptions, getTransactions, waitPromise } from "../helpers.js";
 import BudgetItem from "../components/BudgetItem.jsx";
 import SavingItem from "../components/SavingItem.jsx";
 import { getAllMatchingItems } from "../helpers.js";
@@ -115,11 +115,21 @@ export async function dashboardAction({ request }) {
   if (_action === "deleteTransaction") {
     try {
 
+      const itemDeleted = await getAllMatchingItems({
+        category: "transactions",
+        key: "id",
+        value: values.transactionId,
+      })[0];
+
       deleteItem({
         key: "transactions",
         id: values.transactionId,
       });
 
+      if(itemDeleted.transactionType === "Subscription"){
+        return toast.success("Subscription deleted!");
+      }
+      
       return toast.success("Transaction deleted!");
     } catch (e) {
       throw new Error("There was a problem deleting the transaction.");
@@ -131,6 +141,7 @@ const Dashboard = () => {
   const { user, plans, assets, transactions } = useLoaderData();
 
   const subscriptions = getSubscriptions(transactions);
+  const filteredTransactions = getTransactions(transactions);
 
   const [userName, setUserName] = useState(null);
   const [currencyChoice, setCurrencyChoice] = useState(null);
@@ -220,13 +231,13 @@ const Dashboard = () => {
                     }
 
                     {
-                      transactions && transactions.length > 0 && (
+                      filteredTransactions && filteredTransactions.length > 0 && (
                         <div className="grid-md">
                           <h2>Your Transactions</h2>
                           <Table transactions={
-                            transactions.filter(transaction => (transaction.transactionType === "Expense" || transaction.transactionType === "Income")).sort((a, b) => b.createdAt - a.createdAt).sort((a, b) => b.transactionDate - a.transactionDate).slice(0, 8)
+                            filteredTransactions.sort((a, b) => b.createdAt - a.createdAt).sort((a, b) => b.transactionDate - a.transactionDate).slice(0, 8)
                           }/>
-                          {transactions.length > 8 && (
+                          {filteredTransactions.length > 8 && (
                             <Link to="transactions" className="btn btn--dark">
                               View all transactions
                             </Link>

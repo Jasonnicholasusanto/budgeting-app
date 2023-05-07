@@ -181,11 +181,15 @@ const AddTransactionForm = ({ planPage = false, assetPage = false, plans, assets
                                         })
                                 }
 
-                                { (assets && assets.length > 0) &&
+                                <option key={"none"} value={"none"}>
+                                    None
+                                </option>
+
+                                {/* { (assets && assets.length > 0) &&
                                     <option key={"none"} value={"none"}>
                                         None
                                     </option>
-                                }
+                                } */}
                             </select>
                         </div>
                     }
@@ -200,11 +204,6 @@ const AddTransactionForm = ({ planPage = false, assetPage = false, plans, assets
                                 id="newTransactionAsset"
                                 required
                             >
-                                {/* { (plans && plans.length > 0) &&
-                                    <option key={"none"} value={"none"}>
-                                        None
-                                    </option>
-                                } */}
 
                                 {
                                     assets
@@ -217,6 +216,10 @@ const AddTransactionForm = ({ planPage = false, assetPage = false, plans, assets
                                             )
                                         })
                                 }
+
+                                <option key={"none"} value={"none"}>
+                                    None
+                                </option>
                             </select>
                         </div>
                     }

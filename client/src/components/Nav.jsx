@@ -8,6 +8,8 @@ import DeleteIcon from '@mui/icons-material/Delete';
 // import logomark from "../assets/logomark.svg"
 import logo from "../assets/logo.svg";
 import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
+import CalculateIcon from '@mui/icons-material/Calculate';
+import CoffeeIcon from '@mui/icons-material/Coffee';
 
 const Nav = ({ userName }) => {
   return (
@@ -23,10 +25,26 @@ const Nav = ({ userName }) => {
 
         {/* <NavLink
           to="/"
+          aria-label="Calculator"
+        >
+          <CalculateIcon width={20}/>
+          <span>Calculator</span>
+        </NavLink>
+
+        <NavLink
+          to="/"
           aria-label="About us"
         >
           <EmojiPeopleIcon width={20}/>
           <span>About Us</span>
+        </NavLink>
+
+        <NavLink
+          to="/"
+          aria-label="Donate"
+        >
+          <CoffeeIcon width={20}/>
+          <span>Donate</span>
         </NavLink> */}
       </>
 

@@ -44,8 +44,14 @@ const AssetItem = ({ asset, showDelete = false }) => {
                 !showEdit && 
                 <>
                     <div className="progress-text">
-                        <small>Account Number: {accountNumber.replace(/\d/g, "*")}</small>
-                        <small>BSB Number: {bsbNumber.replace(/\d/g, "*")}</small>
+                        {accountNumber !== ""  
+                            ? <small>Account Number: {accountNumber.replace(/\d/g, "*")}</small>
+                            : <small>Account Number: (Not provided)</small>
+                        }
+                        {bsbNumber !== ""
+                            ? <small>BSB Number: {bsbNumber.replace(/\d/g, "*")}</small>
+                            : <small>BSB Number: (Not Provided)</small>
+                        }
                     </div>
 
                     <div className="flex-sm">
@@ -86,8 +92,14 @@ const AssetItem = ({ asset, showDelete = false }) => {
             {showEdit && 
                 <div>
                     <div className="progress-text">
-                        <small>Account Number: {accountNumber}</small>
-                        <small>BSB Number: {bsbNumber}</small>
+                        {accountNumber !== ""  
+                            ? <small>Account Number: {accountNumber}</small>
+                            : <small>Account Number: (Not provided)</small>
+                        }
+                        {bsbNumber !== ""
+                            ? <small>BSB Number: {bsbNumber}</small>
+                            : <small>BSB Number: (Not Provided)</small>
+                        }
                     </div>
 
                     <EditAssetForm setShowEdit={setShowEdit} currency={currency} id={id} assetType={assetType} name={name} balance={balance} color={color} accountNumber={accountNumber} bsbNumber={bsbNumber} interestRate={interestRate}/>

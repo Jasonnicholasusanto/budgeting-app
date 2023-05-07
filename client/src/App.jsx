@@ -21,6 +21,7 @@ import Error from "./pages/Error";
 import TransactionsPage, { transactionsAction, transactionsLoader } from "./pages/TransactionsPage";
 import PlanPage, { planAction, planLoader } from "./pages/PlanPage";
 import AssetPage, { assetAction, assetLoader } from "./pages/AssetPage";
+import SubscriptionsPage, { subscriptionsAction, subscriptionsLoader } from "./pages/SubscriptionsPage";
 
 const router = createBrowserRouter([
   {
@@ -80,6 +81,12 @@ const router = createBrowserRouter([
         element: <TransactionsPage />,
         loader: transactionsLoader,
         action: transactionsAction,
+      },
+      {
+        path: "subscriptions",
+        element: <SubscriptionsPage />,
+        loader: subscriptionsLoader,
+        action: subscriptionsAction,
       },
       {
         path: "logout",

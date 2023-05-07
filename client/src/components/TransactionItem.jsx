@@ -21,8 +21,6 @@ const TransactionItem = ({ transaction, showPlan, showAsset }) => {
     value: transaction.assetId,
   })[0];
 
-  console.log(transaction.assetId);
-
   return (
     <>
       <td>{transaction.name}</td>
