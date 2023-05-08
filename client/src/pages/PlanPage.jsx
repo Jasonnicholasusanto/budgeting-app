@@ -11,7 +11,7 @@ import SavingItem from "../components/SavingItem";
 import Table from "../components/Table";
 
 // helpers
-import { createTransaction, deleteItem, editPlan, fetchData, getAllMatchingItems, getSubscriptions } from "../helpers";
+import { createTransaction, deleteItem, editPlan, fetchData, getAllMatchingItems, getSubscriptions, getTransactions } from "../helpers";
 import currencies from "../dashboardHelpers/Currencies";
 
 // loader
@@ -98,6 +98,7 @@ const PlanPage = () => {
   const { plan, assets, transactions } = useLoaderData();
 
   const subscriptions = getSubscriptions(transactions);
+  const filteredTransactions = getTransactions(transactions);
 
   return (
     <div
@@ -132,14 +133,14 @@ const PlanPage = () => {
         </div>
       )}
 
-      {transactions && transactions.length > 0 && (
+      {filteredTransactions && filteredTransactions.length > 0 && (
         <div className="grid-md">
           <h2>
             <span className="accent">{plan.name}</span> Transactions
           </h2>
           <Table 
             transactions={
-              transactions.filter(transaction => (transaction.transactionType === "Expense" || transaction.transactionType === "Income")).sort((a, b) => b.createdAt - a.createdAt).sort((a, b) => b.transactionDate - a.transactionDate)
+              filteredTransactions.sort((a, b) => b.createdAt - a.createdAt).sort((a, b) => b.transactionDate - a.transactionDate)
             } 
             showPlan={false} 
             showAsset={true} 

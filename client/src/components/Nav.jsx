@@ -23,7 +23,7 @@ const Nav = ({ userName }) => {
           <span>CashU</span>
         </NavLink>
 
-        {/* <NavLink
+        <NavLink
           to="/"
           aria-label="Calculator"
         >
@@ -45,7 +45,7 @@ const Nav = ({ userName }) => {
         >
           <CoffeeIcon width={20}/>
           <span>Donate</span>
-        </NavLink> */}
+        </NavLink>
       </>
 
       {/* This section is for a button deleting user. */}

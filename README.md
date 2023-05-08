@@ -1,3 +1,5 @@
+**About the Web Application "CashU"**
+
 CashU is a web application that aims to simplify financial planning for individuals seeking a digital and easy-to-use platform. With a focus on aesthetics and simplicity, CashU enables users to select their budgeting or savings goals and manually track their transactions. User privacy is a top priority, and all user data, including name, planners, and transactions, is securely stored in the user's local storage to prevent data leaks. This also allows users to feel much more secure in knowing that their data does not leave their devices.
 
 As the creator of CashU, I understand the importance of simplifying financial planning. Coming from a background of tracking expenses and budgeting with a physical journal, I wanted to create a tool that would make financial planning more accessible and less time-consuming. CashU allows users to effortlessly log transactions and calculate their spending within their allocated budget, making it easier for them to achieve their financial goals.
