@@ -157,8 +157,6 @@ const Dashboard = () => {
   const budgets = (plans && plans.length > 0) ? plans.filter(plan => plan.planType === 'Budget') : [];
   const savings = (plans && plans.length > 0) ? plans.filter(plan => plan.planType === 'Saving') : [];
 
-  const todayDate = new Date();
-
   return (
     <>
       {user ? (

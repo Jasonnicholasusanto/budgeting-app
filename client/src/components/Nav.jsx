@@ -15,7 +15,7 @@ import Calculator from "./Calculator/Calculator";
 
 const Nav = ({ userName }) => {
 
-  const [calculatorVisible, setCalculatorVisible] = useState(false);
+  const [calculatorVisible, setCalculatorVisible] = useState(true);
 
   const toggleCalculator = () => {
     setCalculatorVisible(!calculatorVisible);
