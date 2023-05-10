@@ -21,6 +21,8 @@ const TransactionItem = ({ transaction, showPlan, showAsset }) => {
     value: transaction.assetId,
   })[0];
 
+  const todayDate = new Date();
+
   return (
     <>
       <td>{transaction.name}</td>
@@ -34,7 +36,8 @@ const TransactionItem = ({ transaction, showPlan, showAsset }) => {
       }
 
       { transaction.transactionType === "Subscription" &&
-        <td style={{color: "black"}}>{formatCurrency(transaction.amount, transaction.currency)}</td>
+        ((transaction.transactionDate <= todayDate) ? <td style={{color: "#dd0426"}}>-{formatCurrency(transaction.amount, transaction.currency)}</td>
+          : <td style={{color: "black"}}>{formatCurrency(transaction.amount, transaction.currency)}</td>)
       }
 
       <td>{formatDateToLocaleString(transaction.transactionDate)}</td>
