@@ -1,5 +1,5 @@
 // rrd imports
-import { Form, NavLink } from "react-router-dom"
+import { Form, Link, NavLink, useParams } from "react-router-dom"
 
 // library
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -10,8 +10,29 @@ import logo from "../assets/logo.svg";
 import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
 import CalculateIcon from '@mui/icons-material/Calculate';
 import CoffeeIcon from '@mui/icons-material/Coffee';
+import { useState } from "react";
+import Calculator from "./Calculator/Calculator";
 
 const Nav = ({ userName }) => {
+
+  const [calculatorVisible, setCalculatorVisible] = useState(false);
+
+  const toggleCalculator = () => {
+    setCalculatorVisible(!calculatorVisible);
+  
+    const calculatorWrapper = document.querySelector(".calculatorWrapper");
+    
+    if (calculatorWrapper) {
+      if (calculatorVisible) {
+        calculatorWrapper.classList.add("visible"); // Show the calculator
+        calculatorWrapper.classList.remove("hidden");
+      } else {
+        calculatorWrapper.classList.add("hidden"); // Hide the calculator
+        calculatorWrapper.classList.remove("visible");
+      }
+    }
+  };  
+
   return (
     <nav>
       <>
@@ -23,29 +44,28 @@ const Nav = ({ userName }) => {
           <span>CashU</span>
         </NavLink>
 
-        <NavLink
-          to="/"
-          aria-label="Calculator"
-        >
-          <CalculateIcon width={20}/>
-          <span>Calculator</span>
-        </NavLink>
+        <Calculator className={calculatorVisible ? "calculatorWrapper visible" : "calculatorWrapper hidden"}/>
 
         <NavLink
-          to="/"
+          to=""
           aria-label="About us"
         >
           <EmojiPeopleIcon width={20}/>
           <span>About Us</span>
         </NavLink>
 
-        <NavLink
-          to="/"
-          aria-label="Donate"
+        <Link 
+          to="https://bmc.link/jasonnicholas"
+          target="_blank"
         >
           <CoffeeIcon width={20}/>
           <span>Donate</span>
-        </NavLink>
+        </Link>
+
+        <button className="btn" onClick={toggleCalculator}>
+          <CalculateIcon width={20}/>
+          <span>Calculator</span>
+        </button>
       </>
 
       {/* This section is for a button deleting user. */}

@@ -81,15 +81,20 @@ export const calculateMoney = (planId) => {
 // Function to calculate the current balance of a bank account
 export const calculateBalance = (balance, assetId) => {
     const transactions = fetchData("transactions") ?? [];
+    const today = new Date();
     var incomes = 0;
     var expenses = 0;
 
     for(var i=0; i< transactions.length; i++){
         if(transactions[i].assetId === assetId){
-            if (transactions[i].transactionType === "Expense" || transactions[i].transactionType === "Subscription"){
+            if (transactions[i].transactionType === "Expense"){
                 expenses += transactions[i].amount;
             } else if (transactions[i].transactionType === "Income") {
                 incomes += transactions[i].amount;
+            } else if (transactions[i].transactionType === "Subscription"){
+                if(transactions[i].transactionDate <= today){
+                    expenses += transactions[i].amount;
+                }
             }
         }
     }
@@ -111,6 +116,7 @@ export const getDaysBetweenDates = (dateFrom, dateTo) => {
     const fromDate = new Date(dateFrom);
     const toDate = new Date(dateTo);
     const diffDays = Math.round(Math.abs((fromDate - toDate) / oneDay));
+    
     return diffDays;
 }
 

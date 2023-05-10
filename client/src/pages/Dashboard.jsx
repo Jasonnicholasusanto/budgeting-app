@@ -12,11 +12,12 @@ import AddTransactionForm from "../components/AddTransactionForm.jsx";
 import Table from "../components/Table";
 
 //  helper functions
-import { createAsset, createPlan, createTransaction, createUser, deleteItem, fetchData, getSubscriptions, getTransactions, waitPromise } from "../helpers.js";
+import { createAsset, createPlan, createTransaction, createUser, deleteItem, fetchData, formatDateToLocaleString, getSubscriptions, getTransactions, waitPromise } from "../helpers.js";
 import BudgetItem from "../components/BudgetItem.jsx";
 import SavingItem from "../components/SavingItem.jsx";
 import { getAllMatchingItems } from "../helpers.js";
 import AssetItem from "../components/AssetItem.jsx";
+import Calculator from "../components/Calculator/Calculator.jsx";
 
 // loader to load all the user's data
 export function dashboardLoader() {
@@ -156,11 +157,17 @@ const Dashboard = () => {
   const budgets = (plans && plans.length > 0) ? plans.filter(plan => plan.planType === 'Budget') : [];
   const savings = (plans && plans.length > 0) ? plans.filter(plan => plan.planType === 'Saving') : [];
 
+  const todayDate = new Date();
+
   return (
     <>
       {user ? (
         <div className="dashboard">
-          <h1>Welcome, <span className="accent">{userName}</span></h1>
+
+          <div className="dashboardHeading">
+            <h1>Welcome, <span className="accent">{userName}</span></h1>
+            {/* <h3>Today is <span className="accent">{formatDateToLocaleString(todayDate)}</span></h3> */}
+          </div>
     
           <div className="grid-sm">
             {

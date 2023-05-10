@@ -17,7 +17,9 @@ const BudgetItem = ({ budget, showDelete = false }) => {
 
     const spent = calculateMoney(id);
 
-    const numDays = getDaysBetweenDates(dateFrom, dateTo);
+    const today = new Date();
+
+    const numDays = getDaysBetweenDates(today, dateTo) + 1;
 
     const [showEdit, setShowEdit] = useState(false);
 
@@ -64,7 +66,11 @@ const BudgetItem = ({ budget, showDelete = false }) => {
             }
 
             { (numDays !== null && showDelete) &&
-                <small style={{marginTop: "2ch"}}>You have approximately {formatCurrency((amount+spent)/numDays, currency)} per day</small>
+                <small style={{marginTop: "2ch"}}>You have approximately {formatCurrency((amount+spent)/numDays, currency)} per day.</small>
+            }
+
+            { (numDays !== null && showDelete) &&
+                <small style={{color: "#412110"}}>There are {numDays} days till {formatDateToLocaleString(dateTo)}.</small>
             }
 
             {showDelete ? (

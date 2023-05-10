@@ -238,9 +238,9 @@ const AddTransactionForm = ({ planPage = false, assetPage = false, plans, assets
                 >
                     {
                         isSubmitting 
-                            ? <span>Adding Expense...</span>
+                            ? <span>Adding Transaction...</span>
                             :   (<>
-                                    <span>Add Expense</span>
+                                    <span>Add Transaction</span>
                                     <PaymentsIcon width={20} />
                                 </>)
                     }

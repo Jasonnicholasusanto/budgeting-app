@@ -14,6 +14,7 @@ import EditAssetForm from "./EditAssetForm";
 
 const AssetItem = ({ asset, showDelete = false }) => {
     const { id, name, assetType, balance, bankName, createdOn, currency, accountNumber, bsbNumber, interestRate, color } = asset;
+    
     const currentBalance = calculateBalance(balance, id);
 
     const [showEdit, setShowEdit] = useState(false);

@@ -22,6 +22,7 @@ import TransactionsPage, { transactionsAction, transactionsLoader } from "./page
 import PlanPage, { planAction, planLoader } from "./pages/PlanPage";
 import AssetPage, { assetAction, assetLoader } from "./pages/AssetPage";
 import SubscriptionsPage, { subscriptionsAction, subscriptionsLoader } from "./pages/SubscriptionsPage";
+import Calculator from "./components/Calculator/Calculator";
 
 const router = createBrowserRouter([
   {
@@ -36,6 +37,10 @@ const router = createBrowserRouter([
         loader: dashboardLoader,
         action: dashboardAction,
         errorElement: <Error />
+      },
+      {
+        path: "calculator",
+        element: <Calculator />,
       },
       {
         path: "asset/:id",
