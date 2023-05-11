@@ -216,35 +216,6 @@ p {
 }
 
 
-.calculator-btn{
-  --color: hsl(var(--text));
-  --backdrop: hsl(var(--accent));
-  border: transparent;
-  padding: 0.5ch;
-  font: inherit;
-  color: var(--color);
-  border-radius: var(--round-sm);
-  -webkit-transition: -webkit-box-shadow 300ms cubic-bezier(0.075, 0.82, 0.165, 1);
-  transition: -webkit-box-shadow 300ms cubic-bezier(0.075, 0.82, 0.165, 1);
-  -o-transition: box-shadow 300ms cubic-bezier(0.075, 0.82, 0.165, 1);
-  -webkit-transition: -webkit-box-shadow 300ms
-    cubic-bezier(0.075, 0.82, 0.165, 1);
-  transition: box-shadow 300ms cubic-bezier(0.075, 0.82, 0.165, 1);
-  transition: box-shadow 300ms cubic-bezier(0.075, 0.82, 0.165, 1),
-    -webkit-box-shadow 300ms cubic-bezier(0.075, 0.82, 0.165, 1);
-  transition: box-shadow 300ms cubic-bezier(0.075, 0.82, 0.165, 1),
-    -webkit-box-shadow 300ms cubic-bezier(0.075, 0.82, 0.165, 1);
-}
-
-.calculator-btn:focus {
-  outline: none;
-}
-
-.calculator-btn:is(:hover, :focus-visible) {
-  -webkit-box-shadow: 0 0 0 3px hsl(var(--bkg)), 0 0 0 6px var(--backdrop);
-  box-shadow: 0 0 0 3px hsl(var(--bkg)), 0 0 0 6px var(--backdrop);
-}
-
 /* utility layouts */
 
 .flex-lg {
@@ -370,6 +341,10 @@ nav a {
 
 @media screen and (max-width: 525px) {
   nav a span {
+    display: none;
+  }
+
+  nav button span {
     display: none;
   }
 }

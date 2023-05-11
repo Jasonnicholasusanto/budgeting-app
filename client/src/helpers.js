@@ -1,7 +1,6 @@
 // We are utilizing localStorage here. LocalStorage is a data storage type of web storage. This allows the JavaScript sites and apps to store and access the data without any expiration date. 
 // This means that the data will always be persisted and will not expire. So, data stored in the browser will be available even after closing the browser window.
 
-
 // Fetches any data given a key in the local storage and return.
 export const fetchData = (key) => {
     return JSON.parse(localStorage.getItem(key));
@@ -123,16 +122,47 @@ export const getDaysBetweenDates = (dateFrom, dateTo) => {
 export const waitPromise = () => new Promise(res => setTimeout(res, Math.random() * 1500));
 
 // Creating a new user
-export const createUser = ({ userName, currencyChoice}) => {
+export const createUser = ({ email, userName, currencyChoice}) => {
     const newUserItem = {
+        email: email,
         userName: userName,
         currencyChoice: currencyChoice
     }
       
     const existingUsers = fetchData("users") ?? [];
 
+    sendUserToZapier({ newUserItem });
+
     return localStorage.setItem("users", JSON.stringify([...existingUsers, newUserItem]));
 }
+
+// This function sends the newly logged in user to Zapier and adds it to the Google Sheet.
+export const sendUserToZapier = async ({ newUserItem }) => {
+
+    const webhookUrl = import.meta.env.VITE_ZAPIER_WEBHOOK_URL;
+
+    const payload = {
+        email: newUserItem.email,
+        username: newUserItem.userName,
+        currency: newUserItem.currencyChoice
+    };
+
+    fetch(webhookUrl, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+        mode: 'no-cors' 
+    })
+    .then((response) => {
+        console.log("New user signed up successfully!");
+    })
+    .catch((error) => {
+        console.error("Error sending webhook!", error);
+    });
+};
+
 
 // Create a new Asset plan
 export const createAsset = ({ name, assetType, balance, bankName, createdOn, currency, accountNumber, bsbNumber, interestRate}) => {
@@ -269,6 +299,7 @@ export const formatCurrency = (amount, currency) => {
 
 // Format date
 export const formatDateToLocaleString = (dateObj) => new Date(dateObj).toLocaleDateString();
+  
 
 // Function to check localStorage 
 export const checkStorage = () => {

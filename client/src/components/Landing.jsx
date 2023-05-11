@@ -32,7 +32,18 @@ const Landing = () => {
                 <fetcher.Form 
                     method="post"
                     ref={formRef}
+                    style={{marginTop: "1ch"}}
                 >
+                    <label htmlFor='name'>What is your email?</label>
+                    <input
+                        type="text"
+                        name="email"
+                        required
+                        placeholder="Email" 
+                        aria-label="Your Email" 
+                        autoComplete="email"
+                    />
+
                     <label htmlFor='name'>What is your name?</label>
                     <input
                         type="text"
@@ -62,15 +73,6 @@ const Landing = () => {
                                 })
                         }
                     </select>
-
-                    {/* <input
-                        type="text"
-                        name="email"
-                        required
-                        placeholder="What is your email?" 
-                        aria-label="Your Email" 
-                        autoComplete="email"
-                    /> */}
 
                     <input 
                         type="hidden" 

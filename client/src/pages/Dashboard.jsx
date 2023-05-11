@@ -12,7 +12,7 @@ import AddTransactionForm from "../components/AddTransactionForm.jsx";
 import Table from "../components/Table";
 
 //  helper functions
-import { createAsset, createPlan, createTransaction, createUser, deleteItem, fetchData, formatDateToLocaleString, getSubscriptions, getTransactions, waitPromise } from "../helpers.js";
+import { createAsset, createPlan, createTransaction, createUser, deleteItem, fetchData, formatDateToLocaleString, getSubscriptions, getTransactions, sendUserToZapier, waitPromise } from "../helpers.js";
 import BudgetItem from "../components/BudgetItem.jsx";
 import SavingItem from "../components/SavingItem.jsx";
 import { getAllMatchingItems } from "../helpers.js";
@@ -40,6 +40,7 @@ export async function dashboardAction({ request }) {
   if (_action === "newUser") {
     try {
       createUser({
+        email: values.email,
         userName: values.userName,
         currencyChoice: values.currency
       })
@@ -159,12 +160,13 @@ const Dashboard = () => {
 
   return (
     <>
+
+      {/* <Landing /> */}
       {user ? (
         <div className="dashboard">
 
           <div className="dashboardHeading">
             <h1>Welcome, <span className="accent">{userName}</span></h1>
-            {/* <h3>Today is <span className="accent">{formatDateToLocaleString(todayDate)}</span></h3> */}
           </div>
     
           <div className="grid-sm">
