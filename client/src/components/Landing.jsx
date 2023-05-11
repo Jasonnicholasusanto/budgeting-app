@@ -34,7 +34,7 @@ const Landing = () => {
                     ref={formRef}
                     style={{marginTop: "1ch"}}
                 >
-                    <label htmlFor='name'>What is your email?</label>
+                    <label htmlFor='email'>What is your email?</label>
                     <input
                         type="text"
                         name="email"

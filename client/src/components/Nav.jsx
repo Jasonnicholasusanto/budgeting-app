@@ -9,7 +9,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import logo from "../assets/logo.svg";
 import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
 import CalculateIcon from '@mui/icons-material/Calculate';
-import CoffeeIcon from '@mui/icons-material/Coffee';
+import CookieIcon from '@mui/icons-material/Cookie';
 import { useState } from "react";
 import Calculator from "./Calculator/Calculator";
 
@@ -47,7 +47,7 @@ const Nav = ({ userName }) => {
         <Calculator className={calculatorVisible ? "calculatorWrapper visible" : "calculatorWrapper hidden"}/>
 
         <NavLink
-          to=""
+          to="about-us"
           aria-label="About us"
         >
           <EmojiPeopleIcon width={20}/>
@@ -58,8 +58,8 @@ const Nav = ({ userName }) => {
           to="https://bmc.link/jasonnicholas"
           target="_blank"
         >
-          <CoffeeIcon width={20}/>
-          <span>Donate</span>
+          <CookieIcon width={20}/>
+          <span>Cookie</span>
         </Link>
 
         <button className="btn" onClick={toggleCalculator}>

@@ -163,6 +163,33 @@ export const sendUserToZapier = async ({ newUserItem }) => {
     });
 };
 
+export const sendUserFeedback = async ({ email, name, subject, message }) => {
+    const webhookUrl = import.meta.env.VITE_ZAPIER_WEBHOOK_FEEDBACK_URL;
+
+    const payload = {
+        email: email,
+        name: name,
+        subject: subject,
+        message: message,
+    };
+
+    fetch(webhookUrl, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+        mode: 'no-cors' 
+    })
+    .then((response) => {
+        console.log("Feedback sent successfully!");
+    })
+    .catch((error) => {
+        console.error("Error sending feedback!", error);
+    });
+
+}
+
 
 // Create a new Asset plan
 export const createAsset = ({ name, assetType, balance, bankName, createdOn, currency, accountNumber, bsbNumber, interestRate}) => {

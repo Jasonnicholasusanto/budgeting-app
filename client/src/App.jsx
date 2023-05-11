@@ -23,6 +23,7 @@ import PlanPage, { planAction, planLoader } from "./pages/PlanPage";
 import AssetPage, { assetAction, assetLoader } from "./pages/AssetPage";
 import SubscriptionsPage, { subscriptionsAction, subscriptionsLoader } from "./pages/SubscriptionsPage";
 import Calculator from "./components/Calculator/Calculator";
+import AboutUs, { AboutUsAction } from "./pages/AboutUs";
 
 const router = createBrowserRouter([
   {
@@ -41,6 +42,12 @@ const router = createBrowserRouter([
       {
         path: "calculator",
         element: <Calculator />,
+      },
+      {
+        path: "about-us",
+        element: <AboutUs />,
+        action: AboutUsAction,
+        errorElement: <Error />
       },
       {
         path: "asset/:id",
