@@ -906,7 +906,7 @@ table a {
 }
 
 .message {
-  width: 80%;
+  width: 100%;
   font: inherit;
   font-size: var(--fs-300);
   background-color: hsl(var(--cardBkg));

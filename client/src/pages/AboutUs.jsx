@@ -37,12 +37,12 @@ const AboutUs = () => {
     const fetcher = useFetcher();
     const isSubmitting = fetcher.state === "submitting";
     const formRef = useRef();
-    const focusRef = useRef();
+    // const focusRef = useRef();
 
     useEffect(() => {
         if (!isSubmitting) {
             formRef.current.reset();
-            focusRef.current.focus();
+            // focusRef.current.focus();
         }
     }, [isSubmitting])
 
@@ -77,7 +77,6 @@ const AboutUs = () => {
                         placeholder="My email is..." 
                         aria-label="Your Email" 
                         autoComplete="email"
-                        ref={focusRef}
                     />
 
                     <label htmlFor='name'>Name</label>
