@@ -789,7 +789,7 @@ table a {
   z-index: 100;
   position: fixed;
 
-  right: -2ch; /* Start from outside the window */
+  right: -20ch; /* Start from outside the window */
   transition: all 0.5s ease-in-out; /* Transition duration and timing function */
   opacity: 0;
   top: 0;
@@ -816,7 +816,6 @@ table a {
 .calculatorWrapper.hidden {
   right: -20ch;
   opacity: 0;
-  transform: translateY(100%);
 }
 
 .calculatorScreen {

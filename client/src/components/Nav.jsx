@@ -41,9 +41,10 @@ const Nav = ({ userName }) => {
 
   window.addEventListener('scroll', function() {
     const currentScrollPos = window.pageYOffset;
+    
     const navbar = document.querySelector('.navbar');
 
-    if (prevScrollpos > currentScrollPos) {
+    if (prevScrollpos > currentScrollPos || currentScrollPos < 70) {
       // Scrolling up
       navbar.classList.remove('navbar-hidden');
     } else {
@@ -52,7 +53,12 @@ const Nav = ({ userName }) => {
 
       // When scrolling down, hide the calculator
       if(calculatorVisible){
-        toggleCalculator();
+        setCalculatorVisible(false);
+
+        const calculatorWrapper = document.querySelector(".calculatorWrapper");
+
+        calculatorWrapper.classList.remove("visible");
+        calculatorWrapper.classList.add("hidden");
       }
     }
 
