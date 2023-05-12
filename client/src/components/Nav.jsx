@@ -3,38 +3,64 @@ import { Form, Link, NavLink, useParams } from "react-router-dom"
 
 // library
 import DeleteIcon from '@mui/icons-material/Delete';
-
-// assets
-// import logomark from "../assets/logomark.svg"
-import logo from "../assets/logo.svg";
+import CloseIcon from '@mui/icons-material/Close';
 import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
 import CalculateIcon from '@mui/icons-material/Calculate';
 import CookieIcon from '@mui/icons-material/Cookie';
-import { useState } from "react";
+
+// assets
+import logo from "../assets/logo.svg";
+import { useEffect, useState } from "react";
 import Calculator from "./Calculator/Calculator";
 
 const Nav = ({ userName }) => {
 
-  const [calculatorVisible, setCalculatorVisible] = useState(true);
+  const [calculatorVisible, setCalculatorVisible] = useState(false);
 
   const toggleCalculator = () => {
     setCalculatorVisible(!calculatorVisible);
-  
+
     const calculatorWrapper = document.querySelector(".calculatorWrapper");
     
-    if (calculatorWrapper) {
+    if(calculatorWrapper){
       if (calculatorVisible) {
-        calculatorWrapper.classList.add("visible"); // Show the calculator
-        calculatorWrapper.classList.remove("hidden");
-      } else {
-        calculatorWrapper.classList.add("hidden"); // Hide the calculator
+        // Hide the calculator
         calculatorWrapper.classList.remove("visible");
+        calculatorWrapper.classList.add("hidden");
+      } else {
+        // Show the calculator
+        calculatorWrapper.classList.remove("hidden"); 
+        calculatorWrapper.classList.add("visible");
       }
     }
+    
   };  
 
+  /* Handling when user scroll to hide and display the Nav bar */
+  let prevScrollpos = window.pageYOffset;
+
+  window.addEventListener('scroll', function() {
+    const currentScrollPos = window.pageYOffset;
+    const navbar = document.querySelector('.navbar');
+
+    if (prevScrollpos > currentScrollPos) {
+      // Scrolling up
+      navbar.classList.remove('navbar-hidden');
+    } else {
+      // Scrolling down
+      navbar.classList.add('navbar-hidden');
+
+      // When scrolling down, hide the calculator
+      if(calculatorVisible){
+        toggleCalculator();
+      }
+    }
+
+    prevScrollpos = currentScrollPos;
+  });
+
   return (
-    <nav>
+    <nav className="navbar">
       <>
         <NavLink
           to="/"
@@ -44,7 +70,7 @@ const Nav = ({ userName }) => {
           <span>CashU</span>
         </NavLink>
 
-        <Calculator className={calculatorVisible ? "calculatorWrapper visible" : "calculatorWrapper hidden"}/>
+        <Calculator className={calculatorVisible ? "calculatorWrapper visible" : "calculatorWrapper"}/>
 
         <NavLink
           to="about-us"
@@ -62,7 +88,7 @@ const Nav = ({ userName }) => {
           <span>Cookie</span>
         </Link>
 
-        <button className="btn" onClick={toggleCalculator}>
+        <button className={calculatorVisible ? "btn btn--dark" : "btn"} onClick={toggleCalculator}>
           <CalculateIcon width={20}/>
           <span>Calculator</span>
         </button>

@@ -124,10 +124,10 @@ const Calculator = () => {
     });
   };
 
-  useEffect(() => {
-    const calculatorWrapper = document.querySelector(".calculatorWrapper");
-    calculatorWrapper.classList.add("hidden"); // Hide the calculator initially
-  }, []);
+  // useEffect(() => {
+  //   const calculatorWrapper = document.querySelector(".calculatorWrapper");
+  //   calculatorWrapper.classList.add("hidden"); // Hide the calculator initially
+  // }, []);
 
   return (
     <Wrapper>

@@ -159,9 +159,7 @@ const Dashboard = () => {
   const savings = (plans && plans.length > 0) ? plans.filter(plan => plan.planType === 'Saving') : [];
 
   return (
-    <>
-
-      {/* <Landing /> */}
+    <>      
       {user ? (
         <div className="dashboard">
 

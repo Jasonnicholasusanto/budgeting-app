@@ -25,7 +25,6 @@ const MainLayout = () => {
 
   return (
     <div className="layout">
-      {/* <img style={{position: "absolute", zIndex: "-1"}} src={wave} alt="" /> */}
       <Nav userName={user} />
       <main>
         <Outlet />
