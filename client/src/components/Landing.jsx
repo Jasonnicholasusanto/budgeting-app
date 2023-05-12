@@ -42,6 +42,7 @@ const Landing = () => {
                         placeholder="Email" 
                         aria-label="Your Email" 
                         autoComplete="email"
+                        style={{width: "80%"}}
                     />
 
                     <label htmlFor='name'>What is your name?</label>
@@ -52,6 +53,7 @@ const Landing = () => {
                         placeholder="Name" 
                         aria-label="Your Name" 
                         autoComplete="given-name"
+                        style={{width: "80%"}}
                     />
 
                     <label htmlFor="currency">Currency Choice</label>
@@ -60,7 +62,8 @@ const Landing = () => {
                         id="currency"
                         value={currencyChoice}
                         onChange={(e) => setCurrencyChoice(e.target.value)}
-                        required                        
+                        required          
+                        style={{width: "80%"}}              
                     >
                         {
                             currencies
