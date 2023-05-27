@@ -68,9 +68,9 @@ const Nav = ({ userName }) => {
   return (
     <nav 
       className="navbar" 
-      style={{
-        backdropFilter: "blur(5px)", 
-      }}
+      // style={{
+      //   backdropFilter: "blur(5px)", 
+      // }}
     >
 
       <>
