@@ -43,7 +43,7 @@ const TransactionsPage = () => {
   const { transactions } = useLoaderData();
 
   return (
-    <div className="grid-lg">
+    <div className="grid-lg" style={{minHeight: "40ch"}}>
       <h1>All Transactions</h1>
       {transactions && transactions.length > 0 ? (
         <div className="grid-md">

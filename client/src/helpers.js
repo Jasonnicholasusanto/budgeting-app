@@ -64,7 +64,7 @@ export const calculateMoney = (planId) => {
 
     for(var i=0; i< transactions.length; i++){
         if(transactions[i].planId === planId){
-            if(transactions[i].transactionType === "Expense" || transactions[i].transactionType === "Subscription"){
+            if(transactions[i].transactionType === "Expense"){
                 expenses += transactions[i].amount;
             } else if (transactions[i].transactionType === "Income") {
                 incomes += transactions[i].amount;
@@ -90,11 +90,7 @@ export const calculateBalance = (balance, assetId) => {
                 expenses += transactions[i].amount;
             } else if (transactions[i].transactionType === "Income") {
                 incomes += transactions[i].amount;
-            } else if (transactions[i].transactionType === "Subscription"){
-                if(transactions[i].transactionDate <= today){
-                    expenses += transactions[i].amount;
-                }
-            }
+            } 
         }
     }
 
@@ -131,7 +127,8 @@ export const createUser = ({ email, userName, currencyChoice}) => {
       
     const existingUsers = fetchData("users") ?? [];
 
-    sendUserToZapier({ newUserItem });
+    // sendUserToZapier({ newUserItem });
+    sendEmailToUser({ newUserItem });
 
     return localStorage.setItem("users", JSON.stringify([...existingUsers, newUserItem]));
 }
@@ -163,8 +160,34 @@ export const sendUserToZapier = async ({ newUserItem }) => {
     });
 };
 
+export const sendEmailToUser = async ({ newUserItem }) => {
+
+    const webhookUrl = import.meta.env.VITE_MAKE_WEBHOOK_USER_EMAIL_URL;
+
+    const payload = {
+        email: newUserItem.email,
+        username: newUserItem.userName,
+        currency: newUserItem.currencyChoice
+    };
+
+    fetch(webhookUrl, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+        mode: 'no-cors' 
+    })
+    .then((response) => {
+        console.log("Email sent to user.");
+    })
+    .catch((error) => {
+        console.error("Error sending webhook!", error);
+    });
+};
+
 export const sendUserFeedback = async ({ email, name, subject, message }) => {
-    const webhookUrl = import.meta.env.VITE_ZAPIER_WEBHOOK_FEEDBACK_URL;
+    const webhookUrl = import.meta.env.VITE_MAKE_WEBHOOK_USER_FEEDBACK_URL;
 
     const payload = {
         email: email,
@@ -270,16 +293,17 @@ export const editPlan = ({ id, name, amount, dateFrom, dateTo }) => {
 
 // Creates new transaction
 export const createTransaction = ({
-    transactionType, recurring, name, amount, planId, assetId, transactionDate, currency
+    transactionType, transactionUpcomingType, name, amount, planId, assetId, transactionDate, currency
   }) => {
     const [month, day, year] = transactionDate.split('/').map(Number);
     const dateObject = new Date(year, month - 1, day);
+    const today = new Date();
     const epochTime = dateObject.getTime();
 
     const newItem = {
         id: crypto.randomUUID(),
         transactionType: transactionType,
-        recurring: recurring,
+        transactionUpcomingType: transactionUpcomingType,        
         name: name,
         createdAt: Date.now(),
         transactionDate: epochTime,
@@ -292,12 +316,21 @@ export const createTransaction = ({
     const existingTransactions = fetchData("transactions") ?? [];
 
     return localStorage.setItem("transactions", JSON.stringify([...existingTransactions, newItem]));
-
 }
 
-export const getSubscriptions = (transactions) => {
-    const subscriptions = (transactions && transactions.length > 0) ? transactions.filter(transaction => transaction.transactionType === 'Subscription') : [];
-    return subscriptions;
+export const editUpcomingPayment = ({ id, type }) => {
+    const transactions = fetchData("transactions");
+    const transactionIndex = transactions.findIndex(transaction => transaction.id === id);
+
+    transactions[transactionIndex].transactionType = type;
+    transactions[transactionIndex].transactionUpcomingType = "nil";
+
+    localStorage.setItem("transactions", JSON.stringify(transactions));
+}
+
+export const getUpcomings = (transactions) => {
+    const upcomings = (transactions && transactions.length > 0) ? transactions.filter(transaction => transaction.transactionType === 'Upcoming') : [];
+    return upcomings;
 }
 
 export const getTransactions = (transactions) => {
@@ -326,6 +359,7 @@ export const formatCurrency = (amount, currency) => {
 
 // Format date
 export const formatDateToLocaleString = (dateObj) => new Date(dateObj).toLocaleDateString();
+  
   
 
 // Function to check localStorage 

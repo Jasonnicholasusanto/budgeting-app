@@ -21,7 +21,7 @@ import Error from "./pages/Error";
 import TransactionsPage, { transactionsAction, transactionsLoader } from "./pages/TransactionsPage";
 import PlanPage, { planAction, planLoader } from "./pages/PlanPage";
 import AssetPage, { assetAction, assetLoader } from "./pages/AssetPage";
-import SubscriptionsPage, { subscriptionsAction, subscriptionsLoader } from "./pages/SubscriptionsPage";
+import UpcomingPaymentsPage, { upcomingPaymentsAction, upcomingPaymentsLoader } from "./pages/UpcomingPaymentsPage";
 import Calculator from "./components/Calculator/Calculator";
 import AboutUs, { AboutUsAction } from "./pages/AboutUs";
 
@@ -95,10 +95,10 @@ const router = createBrowserRouter([
         action: transactionsAction,
       },
       {
-        path: "subscriptions",
-        element: <SubscriptionsPage />,
-        loader: subscriptionsLoader,
-        action: subscriptionsAction,
+        path: "upcoming-payments",
+        element: <UpcomingPaymentsPage />,
+        loader: upcomingPaymentsLoader,
+        action: upcomingPaymentsAction,
       },
       {
         path: "logout",

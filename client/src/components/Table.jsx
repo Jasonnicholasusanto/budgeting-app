@@ -1,27 +1,49 @@
 // component import
 import TransactionItem from "./TransactionItem"
 
-const Table = ({ transactions, showPlan = true, showAsset = true }) => {
+const Table = ({ isUpcoming = false, transactions, showPlan = true, showAsset = true }) => {
   return (
     <div className="table">
       <table>
         <thead>
           <tr>
-            { (showPlan && !showAsset) && 
+
+            { ((showPlan && !showAsset) && isUpcoming) && 
               ["Name", "Amount", "Date", "Plan", "Delete"].map(
                 (i, index) => (
                   <th key={index}>{i}</th>
                 ))
             }
 
-            { (showAsset && !showPlan) && 
+            { ((showAsset && !showPlan) && isUpcoming) && 
               ["Name", "Amount", "Date", "Asset", "Delete"].map(
                 (i, index) => (
                   <th key={index}>{i}</th>
                 ))
             }
 
-            { (showAsset && showPlan) && 
+            { ((showPlan && !showAsset) && !isUpcoming) && 
+              ["Name", "Amount", "Date", "Plan", "Delete"].map(
+                (i, index) => (
+                  <th key={index}>{i}</th>
+                ))
+            }
+
+            { ((showAsset && !showPlan) && !isUpcoming) && 
+              ["Name", "Amount", "Date", "Asset", "Delete"].map(
+                (i, index) => (
+                  <th key={index}>{i}</th>
+                ))
+            }
+
+            { ((showAsset && showPlan) && isUpcoming) && 
+              ["Name", "Amount", "Date", "Plan", "Asset", "Delete"].map(
+                (i, index) => (
+                  <th key={index}>{i}</th>
+                ))
+            }
+
+            { ((showAsset && showPlan) && !isUpcoming) && 
               ["Name", "Amount", "Date", "Plan", "Asset", "Delete"].map(
                 (i, index) => (
                   <th key={index}>{i}</th>
@@ -33,7 +55,7 @@ const Table = ({ transactions, showPlan = true, showAsset = true }) => {
           {
             transactions.map((transaction) => (
               <tr key={transaction.id}>
-                <TransactionItem transaction={transaction} showPlan={showPlan} showAsset={showAsset}/>
+                <TransactionItem isUpcoming={isUpcoming} transaction={transaction} showPlan={showPlan} showAsset={showAsset}/>
               </tr>
             ))
           }

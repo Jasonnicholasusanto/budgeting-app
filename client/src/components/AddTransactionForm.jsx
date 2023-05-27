@@ -5,7 +5,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 import PaymentsIcon from '@mui/icons-material/Payments';
-import recurringExpenseTimeFrames from "../transactionHelpers/Recurring.js";
+import upcomingPaymentOpts from "../transactionHelpers/UpcomingPaymentOptions.js";
 import transactionOptions from "../transactionHelpers/TransactionOptions.js";
 
 const AddTransactionForm = ({ planPage = false, assetPage = false, plans, assets, currency }) => {
@@ -20,7 +20,12 @@ const AddTransactionForm = ({ planPage = false, assetPage = false, plans, assets
     const isSubmitting = fetcher.state === "submitting";
 
     const [transactionOpt, setTransactionOpt] = useState(transactionOptions[0].title);
+    const [upcomingType, setUpcomingType] = useState(upcomingPaymentOpts[0].title);
     const [date, setDate] = useState(new Date());
+
+    const todayDate = new Date();
+    const tomorrowDate = new Date(todayDate);
+    tomorrowDate.setDate(tomorrowDate.getDate() + 1);
 
     useEffect(() => {
         if (!isSubmitting) {
@@ -28,6 +33,18 @@ const AddTransactionForm = ({ planPage = false, assetPage = false, plans, assets
             focusRef.current.focus();
         }
     }, [isSubmitting])
+
+    const setTransactionType = (e) => {
+        const selectedValue = e.target.value;
+        setTransactionOpt(selectedValue);
+      
+        if (selectedValue === "Upcoming") {
+            setDate(tomorrowDate);
+        } else {
+            setDate(todayDate);
+        }
+    };
+      
 
     return (
         <div className="form-wrapper">
@@ -70,7 +87,7 @@ const AddTransactionForm = ({ planPage = false, assetPage = false, plans, assets
                             id="transactionOption"
                             required
                             value={transactionOpt}
-                            onChange={(e) => setTransactionOpt(e.target.value)}
+                            onChange={(e) => setTransactionType(e)}
                         >
                             {
                                 transactionOptions
@@ -85,19 +102,20 @@ const AddTransactionForm = ({ planPage = false, assetPage = false, plans, assets
                         </select>
                     </div>
 
-                    {transactionOpt === "Subscription" &&
+                    {transactionOpt === "Upcoming" &&
                         <div className="grid-xs">
-                            <label htmlFor="recurringTransaction">
-                                Recurring {transactionOpt}
+                            <label htmlFor="upcomingTransaction">
+                                Upcoming Transaction Type
                             </label>
                             <select 
-                                name="recurringTransaction"
-                                id="recurringTransaction"
+                                name="upcomingTransaction"
+                                id="upcomingTransaction"
                                 required
-                                disabled
+                                value={upcomingType}
+                                onChange={(e) => setUpcomingType(e.target.value)}
                             >
                                 {
-                                    recurringExpenseTimeFrames
+                                    upcomingPaymentOpts
                                         .map((options) => {
                                             return (
                                                 <option key={options.id} value={options.value}>
@@ -113,9 +131,14 @@ const AddTransactionForm = ({ planPage = false, assetPage = false, plans, assets
 
 
                 <div className="grid-xs">
-                    <label htmlFor="newTransaction">
-                        {transactionOpt} Name*
-                    </label>
+                    { transactionOpt !== "Upcoming"
+                        ? <label htmlFor="newTransaction">
+                            {transactionOpt} Name*
+                          </label>
+                        : <label htmlFor="newTransaction">
+                            {transactionOpt} Payment Name*
+                          </label>
+                    }
                     <input
                         type="text"
                         name="newTransaction"
@@ -151,9 +174,13 @@ const AddTransactionForm = ({ planPage = false, assetPage = false, plans, assets
                             // dateFormat="dd/MM/yyyy"
                             selected={date} 
                             onChange={(date) => setDate(date)} 
-                            todayButton="Today"
+                            todayButton={transactionOpt !== "Upcoming" && "Today"}
                             name="transactionDate"
                             id="transactionDate"
+                            excludeDateIntervals={transactionOpt === "Upcoming" 
+                                && [{start: 0, end: todayDate.setDate(todayDate.getDate())}] 
+                            }
+                            maxDate={transactionOpt !== "Upcoming" && todayDate}
                         />
                     </div>
                 </div>

@@ -7,11 +7,10 @@ import { toast } from "react-toastify";
 // components
 import AddTransactionForm from "../components/AddTransactionForm";
 import Table from "../components/Table";
+import AssetItem from "../components/AssetItem";
 
 // helpers
-import { createTransaction, deleteItem, editAsset, editPlan, fetchData, getAllMatchingItems, getSubscriptions, getTransactions } from "../helpers";
-import currencies from "../dashboardHelpers/Currencies";
-import AssetItem from "../components/AssetItem";
+import { createTransaction, deleteItem, editAsset, fetchData, getAllMatchingItems, getUpcomings, getTransactions } from "../helpers";
 
 // loader
 export async function assetLoader({ params }) {
@@ -45,11 +44,11 @@ export async function assetAction({ request }) {
     try {
       createTransaction({
         transactionType: values.transactionOption,
-        recurring: values.recurringTransaction,
+        transactionUpcomingType: values.transactionOption === "Upcoming" ? values.upcomingTransaction : "nil",
         name: values.newTransaction,
         amount: values.newTransactionAmount,
-        assetId: values.newTransactionAsset ? values.newTransactionAsset : "none",
         planId: values.newTransactionPlan ? values.newTransactionPlan : "none",
+        assetId: values.newTransactionAsset ? values.newTransactionAsset : "none",
         transactionDate: values.transactionDate,
         currency: values.currency
       })
@@ -99,7 +98,7 @@ export async function assetAction({ request }) {
 const AssetPage = () => {
   const { plans, asset, transactions } = useLoaderData();
 
-  const subscriptions = getSubscriptions(transactions);
+  const upcomings = getUpcomings(transactions);
   const filteredTransactions = getTransactions(transactions);
 
   return (
@@ -119,17 +118,18 @@ const AssetPage = () => {
         <AddTransactionForm assetPage={true} assets={[asset]} plans={plans} currency={asset.currency}/>
       </div>
 
-      {subscriptions && subscriptions.length > 0 && (
+      {upcomings && upcomings.length > 0 && (
         <div className="grid-md">
           <h2>
-            <span className="accent">{asset.name}</span> Subscriptions
+            <span className="accent">{asset.name}</span> Upcoming Payments
           </h2>
           <Table 
             transactions={
-              subscriptions.sort((a, b) => b.createdAt - a.createdAt).sort((a, b) => b.transactionDate - a.transactionDate)
+              upcomings.sort((a, b) => b.createdAt - a.createdAt).sort((a, b) => b.transactionDate - a.transactionDate)
             } 
             showAsset={false} 
             showPlan={true} 
+            isUpcoming={true}
           />
         </div>
       )}

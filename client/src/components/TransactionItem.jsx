@@ -1,27 +1,37 @@
 // helper imports
 import React, { useState } from "react";
 import { Link, useFetcher } from "react-router-dom";
-import { formatCurrency, formatDateToLocaleString, getAllMatchingItems } from "../helpers"
+import { editUpcomingPayment, formatCurrency, formatDateToLocaleString, getAllMatchingItems } from "../helpers"
 import DeleteIcon from '@mui/icons-material/Delete';
 
-const TransactionItem = ({ transaction, showPlan, showAsset }) => {
-  const symbol = (transaction.transactionType === "Expense") ? "-" : "+";
-
+const TransactionItem = ({ isUpcoming, transaction, showPlan, showAsset }) => {
+  
+  const symbol = (transaction && (transaction.transactionType === "Expense")) ? "-" : "+";
+  const upcomingPaymentSymbol = (transaction && (transaction.transactionType === "Upcoming" && transaction.transactionUpcomingType === "Expense")) ? "-" : "+";
+  const todayDate = new Date();
   const fetcher = useFetcher();
 
   const plan = getAllMatchingItems({
     category: "plans",
     key: "id",
-    value: transaction.planId,
+    value: transaction && transaction.planId,
   })[0];
 
   const asset = getAllMatchingItems({
     category: "assets",
     key: "id",
-    value: transaction.assetId,
+    value: transaction && transaction.assetId,
   })[0];
 
-  const todayDate = new Date();
+
+  if(isUpcoming && (new Date(transaction.transactionDate) <= todayDate)){
+
+    editUpcomingPayment({
+      id: transaction.id,
+      type: transaction.transactionUpcomingType
+    });
+
+  }
 
   return (
     <>
@@ -35,11 +45,11 @@ const TransactionItem = ({ transaction, showPlan, showAsset }) => {
         <td style={{color: "#38b000"}}>{symbol}{formatCurrency(transaction.amount, transaction.currency)}</td>
       }
 
-      { transaction.transactionType === "Subscription" &&
-        ((transaction.transactionDate <= todayDate) ? <td style={{color: "#dd0426"}}>-{formatCurrency(transaction.amount, transaction.currency)}</td>
-          : <td style={{color: "black"}}>{formatCurrency(transaction.amount, transaction.currency)}</td>)
+      { (transaction.transactionType === "Upcoming") &&
+        <td style={{color: "black"}}>{upcomingPaymentSymbol}{formatCurrency(transaction.amount, transaction.currency)}</td>
       }
 
+      {/* Next Payment date */}
       <td>{formatDateToLocaleString(transaction.transactionDate)}</td>
       
       {showPlan && (

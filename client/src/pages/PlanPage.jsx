@@ -11,8 +11,7 @@ import SavingItem from "../components/SavingItem";
 import Table from "../components/Table";
 
 // helpers
-import { createTransaction, deleteItem, editPlan, fetchData, getAllMatchingItems, getSubscriptions, getTransactions } from "../helpers";
-import currencies from "../dashboardHelpers/Currencies";
+import { createTransaction, deleteItem, editPlan, fetchData, getAllMatchingItems, getUpcomings, getTransactions } from "../helpers";
 
 // loader
 export async function planLoader({ params }) {
@@ -46,11 +45,11 @@ export async function planAction({ request }) {
     try {
       createTransaction({
         transactionType: values.transactionOption,
-        recurring: values.recurringTransaction,
+        transactionUpcomingType: values.transactionOption === "Upcoming" ? values.upcomingTransaction : "nil",
         name: values.newTransaction,
         amount: values.newTransactionAmount,
-        assetId: values.newTransactionAsset ? values.newTransactionAsset : "none",
         planId: values.newTransactionPlan ? values.newTransactionPlan : "none",
+        assetId: values.newTransactionAsset ? values.newTransactionAsset : "none",
         transactionDate: values.transactionDate,
         currency: values.currency
       })
@@ -97,7 +96,7 @@ export async function planAction({ request }) {
 const PlanPage = () => {
   const { plan, assets, transactions } = useLoaderData();
 
-  const subscriptions = getSubscriptions(transactions);
+  const upcomings = getUpcomings(transactions);
   const filteredTransactions = getTransactions(transactions);
 
   return (
@@ -118,17 +117,18 @@ const PlanPage = () => {
         <AddTransactionForm planPage={true} assets={assets} plans={[plan]} currency={plan.currency}/>
       </div>
 
-      {subscriptions && subscriptions.length > 0 && (
+      {upcomings && upcomings.length > 0 && (
         <div className="grid-md">
           <h2>
-            <span className="accent">{plan.name}</span> Subscriptions
+            <span className="accent">{plan.name}</span> Upcoming Payments
           </h2>
           <Table 
             transactions={
-              subscriptions.sort((a, b) => b.createdAt - a.createdAt).sort((a, b) => b.transactionDate - a.transactionDate)
+              upcomings.sort((a, b) => b.createdAt - a.createdAt).sort((a, b) => b.transactionDate - a.transactionDate)
             } 
             showPlan={false} 
             showAsset={true} 
+            isUpcoming={true}
           />
         </div>
       )}

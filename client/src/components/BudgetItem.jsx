@@ -15,6 +15,8 @@ import EditPlanForm from "./EditPlanForm";
 const BudgetItem = ({ budget, showDelete = false }) => {
     const { id, planType, name, amount, color, dateFrom, dateTo, createdAt, currency } = budget;
 
+    const noDates = (dateFrom !== null && dateTo !== null);
+
     const spent = calculateMoney(id);
 
     const today = new Date();
@@ -65,11 +67,11 @@ const BudgetItem = ({ budget, showDelete = false }) => {
                 </div>
             }
 
-            { (numDays !== null && showDelete) &&
+            { (noDates && showDelete) &&
                 <small style={{marginTop: "2ch"}}>You have approximately {formatCurrency((amount+spent)/numDays, currency)} per day.</small>
             }
 
-            { (numDays !== null && showDelete) &&
+            { (noDates && showDelete) &&
                 <small style={{color: "#412110"}}>There are {numDays} days till {formatDateToLocaleString(dateTo)}.</small>
             }
 

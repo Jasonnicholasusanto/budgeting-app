@@ -1,6 +1,6 @@
 // rrd imports
 import { Link, useLoaderData } from "react-router-dom";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 // library imports
 import { toast } from "react-toastify";
@@ -12,12 +12,11 @@ import AddTransactionForm from "../components/AddTransactionForm.jsx";
 import Table from "../components/Table";
 
 //  helper functions
-import { createAsset, createPlan, createTransaction, createUser, deleteItem, fetchData, formatDateToLocaleString, getSubscriptions, getTransactions, sendUserToZapier, waitPromise } from "../helpers.js";
+import { createAsset, createPlan, createTransaction, createUser, deleteItem, fetchData, formatDateToLocaleString, getUpcomings, getTransactions, sendUserToZapier, waitPromise } from "../helpers.js";
 import BudgetItem from "../components/BudgetItem.jsx";
 import SavingItem from "../components/SavingItem.jsx";
 import { getAllMatchingItems } from "../helpers.js";
 import AssetItem from "../components/AssetItem.jsx";
-import Calculator from "../components/Calculator/Calculator.jsx";
 
 // loader to load all the user's data
 export function dashboardLoader() {
@@ -97,7 +96,7 @@ export async function dashboardAction({ request }) {
     try {
       createTransaction({
         transactionType: values.transactionOption,
-        recurring: values.recurringTransaction,
+        transactionUpcomingType: values.transactionOption === "Upcoming" ? values.upcomingTransaction : "nil",
         name: values.newTransaction,
         amount: values.newTransactionAmount,
         planId: values.newTransactionPlan ? values.newTransactionPlan : "none",
@@ -128,8 +127,8 @@ export async function dashboardAction({ request }) {
         id: values.transactionId,
       });
 
-      if(itemDeleted.transactionType === "Subscription"){
-        return toast.success("Subscription deleted!");
+      if(itemDeleted.transactionType === "Upcoming"){
+        return toast.success("Upcoming Payment deleted!");
       }
       
       return toast.success("Transaction deleted!");
@@ -142,7 +141,7 @@ export async function dashboardAction({ request }) {
 const Dashboard = () => {
   const { user, plans, assets, transactions } = useLoaderData();
 
-  const subscriptions = getSubscriptions(transactions);
+  const upcomings = getUpcomings(transactions);
   const filteredTransactions = getTransactions(transactions);
 
   const [userName, setUserName] = useState(null);
@@ -220,15 +219,18 @@ const Dashboard = () => {
                     }
 
                     {
-                      subscriptions && subscriptions.length > 0 && (
+                      upcomings && upcomings.length > 0 && (
                         <div className="grid-md">
-                          <h2>Your subscriptions</h2>
-                          <Table transactions={
-                            subscriptions.sort((a, b) => b.createdAt - a.createdAt).sort((a, b) => b.transactionDate - a.transactionDate).slice(0, 8)
-                          }/>
-                          {subscriptions.length > 8 && (
-                            <Link to="subscriptions" className="btn btn--dark">
-                              View all subscriptions
+                          <h2>Your Upcoming Payments</h2>
+                          <Table 
+                            isUpcoming={true}
+                            transactions={
+                              upcomings.sort((a, b) => b.createdAt - a.createdAt).sort((a, b) => b.transactionDate - a.transactionDate).slice(0, 8)
+                            }
+                          />
+                          {upcomings.length > 8 && (
+                            <Link to="upcoming-payments" className="btn btn--dark">
+                              View all Upcoming Payments
                             </Link>
                           )}
                         </div>
@@ -239,9 +241,12 @@ const Dashboard = () => {
                       filteredTransactions && filteredTransactions.length > 0 && (
                         <div className="grid-md">
                           <h2>Your Transactions</h2>
-                          <Table transactions={
-                            filteredTransactions.sort((a, b) => b.createdAt - a.createdAt).sort((a, b) => b.transactionDate - a.transactionDate).slice(0, 8)
-                          }/>
+                          <Table 
+                            isUpcoming={false}
+                            transactions={
+                              filteredTransactions.sort((a, b) => b.createdAt - a.createdAt).sort((a, b) => b.transactionDate - a.transactionDate).slice(0, 8)
+                            }
+                          />
                           {filteredTransactions.length > 8 && (
                             <Link to="transactions" className="btn btn--dark">
                               View all transactions

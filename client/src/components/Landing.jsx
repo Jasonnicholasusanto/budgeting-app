@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import { Form, useFetcher } from "react-router-dom";
 
@@ -10,7 +10,33 @@ import cash from "../assets/3d-money-bundle.png";
 
 import currencies from "../dashboardHelpers/Currencies.js";
 
+import VanillaTilt from 'vanilla-tilt';
+
+function Tilt(props) {
+    const { options, ...rest } = props;
+    const tilt = useRef(null);
+  
+    useEffect(() => {
+      VanillaTilt.init(tilt.current, options);
+    }, [options]);
+  
+    return <div ref={tilt} {...rest} />;
+}
+
 const Landing = () => {
+
+    const options = {
+        scale: 1.1,
+        speed: 500,
+        max: 15,
+        boxShadow: 'none'
+    };
+
+    const tiltStyle = {
+        border: 'none',
+        backgroundColor: 'transparent',
+        boxShadow: 'none', // Remove the box-shadow effect
+    };
 
     const fetcher = useFetcher();
     const isSubmitting = fetcher.state === "submitting";
@@ -101,7 +127,9 @@ const Landing = () => {
                 </fetcher.Form>
             </div>
 
-            <img src={cash} alt="" className="floating" width={600} />
+            <Tilt className="" options={options} style={tiltStyle}>
+                <img src={cash} alt="" width={600} style={{border: "none", backgroundColor: "transparent"}}/>
+            </Tilt>
         </div>
     )
 }

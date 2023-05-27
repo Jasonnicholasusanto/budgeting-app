@@ -9,7 +9,7 @@ const transactionOptions = [
     },
     {
         id: 2,
-        title: "Subscription"
+        title: "Upcoming"
     },
 ]
 

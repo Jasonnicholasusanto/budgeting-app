@@ -66,7 +66,13 @@ const Nav = ({ userName }) => {
   });
 
   return (
-    <nav className="navbar">
+    <nav 
+      className="navbar" 
+      style={{
+        backdropFilter: "blur(5px)", 
+      }}
+    >
+
       <>
         <NavLink
           to="/"
@@ -94,7 +100,7 @@ const Nav = ({ userName }) => {
           <span>Cookie</span>
         </Link>
 
-        <button className={calculatorVisible ? "btn btn--dark" : "btn"} onClick={toggleCalculator}>
+        <button className={calculatorVisible ? "btn btn--calculator" : "btn"} onClick={toggleCalculator}>
           <CalculateIcon width={20}/>
           <span>Calculator</span>
         </button>
