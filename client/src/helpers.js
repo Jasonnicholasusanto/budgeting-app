@@ -68,6 +68,12 @@ export const calculateMoney = (planId) => {
                 expenses += transactions[i].amount;
             } else if (transactions[i].transactionType === "Income") {
                 incomes += transactions[i].amount;
+            } else if(transactions[i].transactionType === "Upcoming") {
+                if (transactions[i].transactionUpcomingType === "Expense") {
+                    expenses += transactions[i].amount;
+                } else if (transactions[i].transactionUpcomingType === "Income") {
+                    incomes += transactions[i].amount;
+                }
             }
         }
     }
@@ -80,7 +86,6 @@ export const calculateMoney = (planId) => {
 // Function to calculate the current balance of a bank account
 export const calculateBalance = (balance, assetId) => {
     const transactions = fetchData("transactions") ?? [];
-    const today = new Date();
     var incomes = 0;
     var expenses = 0;
 
@@ -90,7 +95,13 @@ export const calculateBalance = (balance, assetId) => {
                 expenses += transactions[i].amount;
             } else if (transactions[i].transactionType === "Income") {
                 incomes += transactions[i].amount;
-            } 
+            } else if(transactions[i].transactionType === "Upcoming") {
+                if (transactions[i].transactionUpcomingType === "Expense") {
+                    expenses += transactions[i].amount;
+                } else if (transactions[i].transactionUpcomingType === "Income") {
+                    incomes += transactions[i].amount;
+                }
+            }
         }
     }
 

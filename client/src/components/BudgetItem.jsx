@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Form, Link } from "react-router-dom";
 
 // helper functions
@@ -25,6 +25,30 @@ const BudgetItem = ({ budget, showDelete = false }) => {
 
     const [showEdit, setShowEdit] = useState(false);
 
+    // const [width, setWidth] = useState(0);
+
+    // useEffect(() => {
+    //     const maxValue = amount + spent;
+    
+    //     const move = () => {
+    //       let currentWidth = 0;
+    //       const id = setInterval(() => {
+    //         if (currentWidth >= maxValue) {
+    //           clearInterval(id);
+    //         } else {
+    //           currentWidth++;
+    //           setWidth(currentWidth);
+    //         }
+    //       }, 0);
+    //     };
+    
+    //     move();
+    
+    //     return () => {
+    //       clearInterval(id);
+    //     };
+    //   }, [amount, spent]);
+
     return (
         <div
             className="budget"
@@ -37,12 +61,13 @@ const BudgetItem = ({ budget, showDelete = false }) => {
                 <p>{formatCurrency(amount, currency)} Budgeted</p>
             </div>
 
-            <progress max={amount} value={amount + spent}>
+            <progress id="progressBar" className="progressBar" max={amount} value={amount+spent}>
                 { spent <= 0
                     ? formatPercentage((amount + spent) / amount)
                     : formatPercentage(amount)
                 }
             </progress>
+
 
             <div className="progress-text">
                 { spent <= 0
