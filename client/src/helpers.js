@@ -95,13 +95,14 @@ export const calculateBalance = (balance, assetId) => {
                 expenses += transactions[i].amount;
             } else if (transactions[i].transactionType === "Income") {
                 incomes += transactions[i].amount;
-            } else if(transactions[i].transactionType === "Upcoming") {
-                if (transactions[i].transactionUpcomingType === "Expense") {
-                    expenses += transactions[i].amount;
-                } else if (transactions[i].transactionUpcomingType === "Income") {
-                    incomes += transactions[i].amount;
-                }
-            }
+            } 
+            // else if(transactions[i].transactionType === "Upcoming") {
+            //     if (transactions[i].transactionUpcomingType === "Expense") {
+            //         expenses += transactions[i].amount;
+            //     } else if (transactions[i].transactionUpcomingType === "Income") {
+            //         incomes += transactions[i].amount;
+            //     }
+            // }
         }
     }
 
