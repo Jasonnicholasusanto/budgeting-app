@@ -50,7 +50,7 @@ const UpcomingPaymentsPage = () => {
           <h2>
             Upcoming Payments <small>({upcomings.length} total)</small>
           </h2>
-          <Table transactions={upcomings.sort((a, b) => b.createdAt - a.createdAt).sort((a, b) => b.transactionDate - a.transactionDate)} />
+          <Table transactions={upcomings.sort((a, b) => a.createdAt - b.createdAt).sort((a, b) => a.transactionDate - b.transactionDate)} />
         </div>
       ) : (
         <p>No upcoming payments to show</p>

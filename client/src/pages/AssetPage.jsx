@@ -125,7 +125,7 @@ const AssetPage = () => {
           </h2>
           <Table 
             transactions={
-              upcomings.sort((a, b) => b.createdAt - a.createdAt).sort((a, b) => b.transactionDate - a.transactionDate)
+              upcomings.sort((a, b) => a.createdAt - b.createdAt).sort((a, b) => a.transactionDate - b.transactionDate)
             } 
             showAsset={false} 
             showPlan={true} 

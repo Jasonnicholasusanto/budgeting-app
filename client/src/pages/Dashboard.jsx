@@ -225,7 +225,7 @@ const Dashboard = () => {
                           <Table 
                             isUpcoming={true}
                             transactions={
-                              upcomings.sort((a, b) => b.createdAt - a.createdAt).sort((a, b) => b.transactionDate - a.transactionDate).slice(0, 8)
+                              upcomings.sort((a, b) => a.createdAt - b.createdAt).sort((a, b) => a.transactionDate - b.transactionDate).slice(0, 8)
                             }
                           />
                           {upcomings.length > 8 && (
